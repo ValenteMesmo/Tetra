@@ -1,18 +1,28 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Tetra.Desktop
 {
+    class GameObject
+    {
+        public Vector2 Postition;
+    }
+
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        SpriteBatch spriteBatchUi;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private SpriteBatch spriteBatchUi;
         private Texture2D blockTexture;
         private Texture2D playerTexture;
         private SpriteFont SpriteFont;
         private Camera Camera;
+
+        private List<GameObject> Objects = new List<GameObject>();
 
         public Game1()
         {
@@ -40,17 +50,35 @@ namespace Tetra.Desktop
         {
             Content.Unload();
         }
-        
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             var mouse = Mouse.GetState();
+
+
+            if (mouse.LeftButton == ButtonState.Pressed)
+            {
+                var mousePosition = Camera.ToWorld(mouse.Position.ToVector2());
+                if (!Objects.Any(f => new Rectangle(f.Postition.ToPoint(), new Vector2(size, size).ToPoint()).Contains(mousePosition)))
+                {
+                    Objects.Add(new GameObject()
+                    {
+                        Postition = new Vector2(
+                            (float)(Math.Floor(mousePosition.X / size) * size),
+                            (float)(Math.Floor(mousePosition.Y / size) * size)
+                        )
+                    });
+                }
+            }
+
             Camera.UpdateCamera(GraphicsDevice.Viewport);
 
             base.Update(gameTime);
         }
+        const float size = 100;
 
         protected override void Draw(GameTime gameTime)
         {
@@ -66,24 +94,24 @@ namespace Tetra.Desktop
                    Camera.Transform
                );
 
-            const int size = 50;
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    spriteBatch.Draw(
-                        texture: blockTexture
-                        , destinationRectangle: new Rectangle(i * size, j * size, size, size)
-                        , sourceRectangle: null
-                        , color: Color.White
-                        , rotation: 0
-                        , origin: Vector2.Zero
-                        , effects: SpriteEffects.None
-                        , layerDepth: 0f
-                    );
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    for (int j = 0; j < 10; j++)
+            //    {
+            foreach (var obj in Objects)
+                spriteBatch.Draw(
+                    texture: blockTexture
+                    , destinationRectangle: new Rectangle((int)obj.Postition.X, (int)obj.Postition.Y, (int)size, (int)size)
+                    , sourceRectangle: null
+                    , color: Color.White
+                    , rotation: 0
+                    , origin: Vector2.Zero
+                    , effects: SpriteEffects.None
+                    , layerDepth: 0f
+                );
 
-                }
-            }
+            //    }
+            //}
 
             var mouse = Mouse.GetState();
             var mouse2 = Camera.ToWorld(mouse.Position.ToVector2());
