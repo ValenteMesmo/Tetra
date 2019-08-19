@@ -1,49 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace Tetra.Desktop
 {
-    public class CameraMoveWithMouse
-    {
-        private readonly Camera camera;
-        private bool wasPressed;
-        private Point mouseOrigin;
-
-        public CameraMoveWithMouse(Camera camera)
-        {
-            this.camera = camera;
-        }
-
-        public void Update()
-        {
-            var mouse = Mouse.GetState();
-
-            //Console.WriteLine($"mouse x={mouse.Position.X};   y={mouse.Position.Y};");
-            if (mouse.RightButton == ButtonState.Pressed)
-            {
-
-                //if (!wasPressed)
-                //{
-                //    wasPressed = true;
-                //    mouseOrigin = mouse.Position;
-
-                //    mouseOrigin = Vector2.Subtract(camera.Position, mouse.Position.ToVector2()).ToPoint();
-                //}
-                //else {
-                //}
-
-
-                //camera.Position = (mouse.Position - mouseOrigin).ToVector2();
-                    camera.Position = mouse.Position.ToVector2();
-            }
-            else
-                wasPressed = false;
-
-        }
-    }
-
     public class Camera
     {
         public float Zoom { get; set; }
@@ -111,10 +71,13 @@ namespace Tetra.Desktop
                 Zoom = 2f;
         }
 
-        public Vector2 GetWorldPostion(Vector2 mousePosition)
-        {
-            return Vector2.Transform(mousePosition, Matrix.Invert(Transform));
-        }
+
+        public Vector2 ToWorld(Vector2 position) =>
+            Vector2.Transform(position, Matrix.Invert(Transform));
+
+        public Vector2 ToScreen(Vector2 position) =>
+            Vector2.Transform(position, Transform);
+
 
         public void UpdateCamera(Viewport bounds)
         {

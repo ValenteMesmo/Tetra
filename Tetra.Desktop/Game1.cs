@@ -86,7 +86,7 @@ namespace Tetra.Desktop
             }
 
             var mouse = Mouse.GetState();
-            var mouse2 = Camera.GetWorldPostion(mouse.Position.ToVector2());
+            var mouse2 = Camera.ToWorld(mouse.Position.ToVector2());
             spriteBatchUi.DrawString(SpriteFont, $"mouse {mouse.Position.X}, {mouse.Position.Y}", new Vector2(50, 50), Color.White);
             spriteBatchUi.DrawString(SpriteFont, $"world {mouse2.X}, {mouse2.Y}", new Vector2(50, 100), Color.White);
             spriteBatchUi.DrawString(SpriteFont, $"camera {Camera.Position.X}, {Camera.Position.Y}", new Vector2(50, 150), Color.White);
