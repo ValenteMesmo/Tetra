@@ -73,6 +73,15 @@ namespace Tetra.Desktop
                     });
                 }
             }
+            else if (mouse.RightButton == ButtonState.Pressed)
+            {
+                var mousePosition = Camera.ToWorld(mouse.Position.ToVector2());
+                var obj = Objects.FirstOrDefault(f => new Rectangle(f.Postition.ToPoint(), new Vector2(size, size).ToPoint()).Contains(mousePosition));
+                if (obj!=null)
+                {
+                    Objects.Remove(obj);
+                }
+            }
 
             Camera.UpdateCamera(GraphicsDevice.Viewport);
 
@@ -94,10 +103,6 @@ namespace Tetra.Desktop
                    Camera.Transform
                );
 
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    for (int j = 0; j < 10; j++)
-            //    {
             foreach (var obj in Objects)
                 spriteBatch.Draw(
                     texture: blockTexture
@@ -109,9 +114,6 @@ namespace Tetra.Desktop
                     , effects: SpriteEffects.None
                     , layerDepth: 0f
                 );
-
-            //    }
-            //}
 
             var mouse = Mouse.GetState();
             var mouse2 = Camera.ToWorld(mouse.Position.ToVector2());

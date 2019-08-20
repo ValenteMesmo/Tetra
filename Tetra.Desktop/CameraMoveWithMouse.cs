@@ -18,7 +18,7 @@ namespace Tetra.Desktop
         {
             var mouse = Mouse.GetState();
 
-            if (mouse.RightButton == ButtonState.Pressed)
+            if (mouse.MiddleButton == ButtonState.Pressed)
             {
 
                 if (!wasPressed)
