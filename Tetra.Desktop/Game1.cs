@@ -1,17 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Tetra.Desktop
 {
-    class GameObject
-    {
-        public Vector2 Postition;
-    }
-
     public class Game1 : Game
     {
         private GraphicsDeviceManager graphics;
@@ -21,8 +14,9 @@ namespace Tetra.Desktop
         private Texture2D playerTexture;
         private SpriteFont SpriteFont;
         private Camera Camera;
-
-        private List<GameObject> Objects = new List<GameObject>();
+        private MouseInfo Mouse;
+        private WorldPieceAdder Adder;
+        private List<GameObject> WorldPieces = new List<GameObject>();
 
         public Game1()
         {
@@ -41,9 +35,15 @@ namespace Tetra.Desktop
             Camera = new Camera(GraphicsDevice.Viewport);
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteBatchUi = new SpriteBatch(GraphicsDevice);
+
             blockTexture = Content.Load<Texture2D>("tiles/floor");
             playerTexture = Content.Load<Texture2D>("tiles/player");
+
             SpriteFont = Content.Load<SpriteFont>("SpriteFont");
+
+            Mouse = new MouseInfo(Camera);
+
+            Adder = new WorldPieceAdder(WorldPieces, Mouse);
         }
 
         protected override void UnloadContent()
@@ -56,33 +56,13 @@ namespace Tetra.Desktop
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var mouse = Mouse.GetState();
+            //update inputs
+            Mouse.Update();
 
+            //custom updates
+            Adder.Update();
 
-            if (mouse.LeftButton == ButtonState.Pressed)
-            {
-                var mousePosition = Camera.ToWorld(mouse.Position.ToVector2());
-                if (!Objects.Any(f => new Rectangle(f.Postition.ToPoint(), new Vector2(size, size).ToPoint()).Contains(mousePosition)))
-                {
-                    Objects.Add(new GameObject()
-                    {
-                        Postition = new Vector2(
-                            (float)(Math.Floor(mousePosition.X / size) * size),
-                            (float)(Math.Floor(mousePosition.Y / size) * size)
-                        )
-                    });
-                }
-            }
-            else if (mouse.RightButton == ButtonState.Pressed)
-            {
-                var mousePosition = Camera.ToWorld(mouse.Position.ToVector2());
-                var obj = Objects.FirstOrDefault(f => new Rectangle(f.Postition.ToPoint(), new Vector2(size, size).ToPoint()).Contains(mousePosition));
-                if (obj!=null)
-                {
-                    Objects.Remove(obj);
-                }
-            }
-
+            //update camera
             Camera.UpdateCamera(GraphicsDevice.Viewport);
 
             base.Update(gameTime);
@@ -103,7 +83,7 @@ namespace Tetra.Desktop
                    Camera.Transform
                );
 
-            foreach (var obj in Objects)
+            foreach (var obj in WorldPieces)
                 spriteBatch.Draw(
                     texture: blockTexture
                     , destinationRectangle: new Rectangle((int)obj.Postition.X, (int)obj.Postition.Y, (int)size, (int)size)
@@ -115,10 +95,8 @@ namespace Tetra.Desktop
                     , layerDepth: 0f
                 );
 
-            var mouse = Mouse.GetState();
-            var mouse2 = Camera.ToWorld(mouse.Position.ToVector2());
-            spriteBatchUi.DrawString(SpriteFont, $"mouse {mouse.Position.X}, {mouse.Position.Y}", new Vector2(50, 50), Color.White);
-            spriteBatchUi.DrawString(SpriteFont, $"world {mouse2.X}, {mouse2.Y}", new Vector2(50, 100), Color.White);
+            spriteBatchUi.DrawString(SpriteFont, $"mouse {Mouse.ScreenPosition.X}, {Mouse.ScreenPosition.Y}", new Vector2(50, 50), Color.White);
+            spriteBatchUi.DrawString(SpriteFont, $"world {Mouse.WorldPosition.X}, {Mouse.WorldPosition.Y}", new Vector2(50, 100), Color.White);
             spriteBatchUi.DrawString(SpriteFont, $"camera {Camera.Position.X}, {Camera.Position.Y}", new Vector2(50, 150), Color.White);
 
             spriteBatch.End();
