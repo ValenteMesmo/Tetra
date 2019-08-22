@@ -5,6 +5,26 @@ using System.Linq;
 
 namespace Tetra.Desktop
 {
+    public class MouseCursor : GameObject
+    {
+        public MouseCursor()
+        {
+        }
+
+        public override void Update()
+        {
+            Position = new Vector2(
+                           (float)(Math.Floor(mouse.WorldPosition.X / size) * size),
+                           (float)(Math.Floor(mouse.WorldPosition.Y / size) * size)
+                       );
+        }
+
+        public override IEnumerable<Collider> GetColliders()
+        {
+            return base.GetColliders();
+        }        
+    }
+
     public class WorldPieceAdder
     {
         private readonly List<GameObject> WorldPieces;
@@ -21,11 +41,11 @@ namespace Tetra.Desktop
         {
             if (mouse.LeftButtonPressed)
             {
-                if (!WorldPieces.Any(f => new Rectangle(f.Postition.ToPoint(), new Vector2(size, size).ToPoint()).Contains(mouse.WorldPosition)))
+                if (!WorldPieces.Any(f => new Rectangle(f.Position.ToPoint(), new Vector2(size, size).ToPoint()).Contains(mouse.WorldPosition)))
                 {
                     WorldPieces.Add(new GameObject()
                     {
-                        Postition = new Vector2(
+                        Position = new Vector2(
                             (float)(Math.Floor(mouse.WorldPosition.X / size) * size),
                             (float)(Math.Floor(mouse.WorldPosition.Y / size) * size)
                         )
@@ -34,12 +54,12 @@ namespace Tetra.Desktop
             }
             else if (mouse.RightButtonPressed)
             {
-                var obj = WorldPieces.FirstOrDefault(f => new Rectangle(f.Postition.ToPoint(), new Vector2(size, size).ToPoint()).Contains(mouse.WorldPosition));
+                var obj = WorldPieces.FirstOrDefault(f => new Rectangle(f.Position.ToPoint(), new Vector2(size, size).ToPoint()).Contains(mouse.WorldPosition));
                 if (obj != null)
                 {
                     WorldPieces.Remove(obj);
                 }
             }
         }
-    }
+    }    
 }
