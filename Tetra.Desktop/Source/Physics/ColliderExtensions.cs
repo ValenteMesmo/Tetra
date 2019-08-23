@@ -2,7 +2,7 @@
 {
     public static class ColliderExtensions
     {
-        public static void IsCollidingH(
+        public static void IsCollidingHorizontally(
             this Collider a,
             Collider b)
         {
@@ -12,13 +12,13 @@
                 && b.Top() <= a.Bottom())
             {
                 if (a.Right() - b.Right() > 0)
-                    a.LeftCollision(a, b);
+                    a.LeftCollision.Collide(a, b);
                 else if (a.Right() - b.Right() < 0)
-                    a.RightCollision(a, b);
+                    a.RightCollision.Collide(a, b);
             }
         }
 
-        public static void IsCollidingV(
+        public static void IsCollidingVertically(
            this Collider a,
             Collider b)
         {
@@ -29,9 +29,9 @@
                 && b.Top() <= a.Bottom())
             {
                 if (a.Bottom() - b.Bottom() > 0)
-                    a.TopCollision(a, b);
+                    a.TopCollision.Collide(a, b);
                 else if (a.Bottom() - b.Bottom() < 0)
-                    a.BotCollision(a, b);
+                    a.BotCollision.Collide(a, b);
             }
         }
 

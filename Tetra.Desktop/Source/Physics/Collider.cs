@@ -3,6 +3,11 @@ using System;
 
 namespace Tetra.Desktop
 {
+    public interface IHandleCollisions
+    {
+        void Collide(Collider Source, Collider Target);
+    }
+
     public class Collider
     {
         public float OffsetX;
@@ -14,30 +19,26 @@ namespace Tetra.Desktop
 
         public bool IsDumb { get; private set; } = true;
 
-        private Action<Collider, Collider> _TopCollision = EMPTY_COLLISION_HANDLER;
-        public Action<Collider, Collider> TopCollision { get => _TopCollision; set { _TopCollision = value; IsDumb = false; } }
+        private IHandleCollisions _TopCollision = No.Collision;
+        public IHandleCollisions TopCollision { get => _TopCollision; set { _TopCollision = value; IsDumb = false; } }
 
-        private Action<Collider, Collider> _LeftCollision = EMPTY_COLLISION_HANDLER;
-        public Action<Collider, Collider> LeftCollision { get => _LeftCollision; set { _LeftCollision = value; IsDumb = false; } }
+        private IHandleCollisions _LeftCollision = No.Collision;
+        public IHandleCollisions LeftCollision { get => _LeftCollision; set { _LeftCollision = value; IsDumb = false; } }
 
-        private Action<Collider, Collider> _BotCollision = EMPTY_COLLISION_HANDLER;
-        public Action<Collider, Collider> BotCollision { get => _BotCollision; set { _BotCollision = value; IsDumb = false; } }
+        private IHandleCollisions _BotCollision = No.Collision;
+        public IHandleCollisions BotCollision { get => _BotCollision; set { _BotCollision = value; IsDumb = false; } }
 
-        private Action<Collider, Collider> _RightCollision = EMPTY_COLLISION_HANDLER;
-        public Action<Collider, Collider> RightCollision { get => _RightCollision; set { _RightCollision = value; IsDumb = false; } }
+        private IHandleCollisions _RightCollision = No.Collision;
+        public IHandleCollisions RightCollision { get => _RightCollision; set { _RightCollision = value; IsDumb = false; } }
 
-        private Action _BeforeCollisions = EMPTY_BEFORE_COLLISION;
-        public Action BeforeCollisions { get => _BeforeCollisions; set { _BeforeCollisions = value; IsDumb = false; } }
-
-        private static Action<Collider, Collider> EMPTY_COLLISION_HANDLER = (source, target) => { };
-        private static Action EMPTY_BEFORE_COLLISION = () => { };
+        public IHandleUpdates BeforeCollisions { get; set; } = No.Update;
 
         public Collider(GameObject Parent)
         {
             this.Parent = Parent;
         }
 
-        public Rectangle AsRectangle() => 
+        public Rectangle AsRectangle() =>
             new Rectangle((int)this.RelativeX(), (int)this.RelativeY(), (int)Width, (int)Height);
     }
 }

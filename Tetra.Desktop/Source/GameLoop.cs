@@ -31,16 +31,17 @@ namespace Tetra.Desktop
 
             foreach (var GameObject in GameObjects.ToList())
             {
-                GameObject.Update();
+                GameObject.Update.Update();
 
                 GameObject.Position.Y += GameObject.Velocity.Y * elapsed;
                 var colliders = GameObject.GetColliders();
                 foreach (var collider in colliders)
                 {
+                    collider.BeforeCollisions.Update();
+
                     if (collider.IsDumb)
                         continue;
 
-                    collider.BeforeCollisions();
                     CheckCollisions(CollisionDirection.Vertical, collider);
                 }
 
@@ -69,9 +70,9 @@ namespace Tetra.Desktop
                     continue;
 
                 if (direction == CollisionDirection.Vertical)
-                    source.IsCollidingV(targets[i]);
+                    source.IsCollidingVertically(targets[i]);
                 else
-                    source.IsCollidingH(targets[i]);
+                    source.IsCollidingHorizontally(targets[i]);
             }
         }
 

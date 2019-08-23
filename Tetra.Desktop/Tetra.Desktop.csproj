@@ -43,9 +43,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Player.cs" />
+    <Compile Include="Source\Updates\IHandleUpdates.cs" />
+    <Compile Include="Source\Constants\No.cs" />
+    <Compile Include="Source\Updates\MoveMouseCursorToNearbyCell.cs" />
     <Compile Include="Source\Physics\Collider.cs" />
     <Compile Include="Source\Physics\ColliderExtensions.cs" />
-    <Compile Include="Source\GameConstants.cs" />
+    <Compile Include="Source\Constants\GameConstants.cs" />
     <Compile Include="Source\GameLoop.cs" />
     <Compile Include="Source\GameObject.cs" />
     <Compile Include="Source\Camera\Camera.cs" />
