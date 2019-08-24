@@ -19,8 +19,7 @@ namespace Tetra.Desktop
         private SpriteFont SpriteFont;
         private Camera Camera;
         private MouseInfo Mouse;
-        private WorldPieceAdder Adder;
-        private List<GameObject> WorldPieces = new List<GameObject>();
+        private GameLoop GameLoop;
 
         public Game1()
         {
@@ -49,8 +48,7 @@ namespace Tetra.Desktop
 
             Mouse = new MouseInfo(Camera);
 
-            Adder = new WorldPieceAdder(WorldPieces, Mouse);
-            WorldPieces.Add(new Player { });
+            GameLoop = new GameLoop(Camera, Mouse);
         }
 
         protected override void UnloadContent()
@@ -67,7 +65,7 @@ namespace Tetra.Desktop
             Mouse.Update();
 
             //custom updates
-            Adder.Update();
+            GameLoop.Update(1);//??????
 
             //update camera
             Camera.UpdateCamera(GraphicsDevice.Viewport);
@@ -90,21 +88,13 @@ namespace Tetra.Desktop
                    Camera.Transform
                );
 
-            foreach (var obj in WorldPieces)
-                if (obj is Player)
-                    spriteBatch.Draw(playerTexture, new Rectangle((int)obj.Position.X, (int)obj.Position.Y, (int)size, (int)size), Color.White);
-                else
+            foreach (var obj in GameLoop.GameObjects)
+                foreach (var frame in obj.Animation.GetFrame())
                     spriteBatch.Draw(
-                        texture: blockTexture
-                        , destinationRectangle: new Rectangle((int)obj.Position.X, (int)obj.Position.Y, (int)size, (int)size)
-                        , sourceRectangle: null
-                        , color: Color.White
-                        , rotation: 0
-                        , origin: Vector2.Zero
-                        , effects: SpriteEffects.None
-                        , layerDepth: 0f
+                        frame.Texture == "cursor" ? playerTexture : blockTexture, 
+                        new Rectangle((int)obj.Position.X + (int)frame.OffsetX, (int)obj.Position.Y + (int)frame.OffsetY, (int)frame.Width, (int)frame.Height), 
+                        Color.White
                     );
-
 
             while (RectanglesToRenderUI.Count > 0)
             {

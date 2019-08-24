@@ -10,14 +10,13 @@ namespace Tetra.Desktop
         private readonly Camera Camera;
         public readonly QuadTree quadtree;
 
-        public GameLoop(Camera Camera)
+        public GameLoop(Camera Camera, MouseInfo mouseInfo)
         {
             this.Camera = Camera;
             quadtree = new QuadTree(new Rectangle(-11000, -7000, 23000, 15000), 50, 5);
 
-            var Player = new Player();
-
-            GameObjects.Add(Player);
+            GameObjects.Add(new Player());
+            GameObjects.Add(new MouseCursor(mouseInfo));
         }
 
         public void Update(float elapsed)

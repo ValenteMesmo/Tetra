@@ -8,8 +8,8 @@ namespace Tetra.Desktop
 {
     public class AnimationFrame
     {
-        private readonly GameObject Parent;
-        private readonly string Texture;
+        public readonly GameObject Parent;
+        public readonly string Texture;
         public readonly float OffsetX;
         public readonly float OffsetY;
         public readonly int Width;

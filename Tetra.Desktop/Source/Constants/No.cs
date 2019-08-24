@@ -22,11 +22,11 @@ namespace Tetra.Desktop
 
         private class NoAnimation : IHandleAnimations
         {
-            public IHandleUpdates Update => No.Update;
-
             public bool RenderOnUiLayer => false;
 
             public IEnumerable<AnimationFrame> GetFrame() => Frames;
+
+            public void Update() { }
         }
     }
 }
