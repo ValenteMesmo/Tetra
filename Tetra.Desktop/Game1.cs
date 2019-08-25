@@ -91,7 +91,7 @@ namespace Tetra.Desktop
             foreach (var obj in GameLoop.GameObjects)
                 foreach (var frame in obj.Animation.GetFrame())
                     spriteBatch.Draw(
-                        frame.Texture == "cursor" ? playerTexture : blockTexture, 
+                        frame.Texture == "cursor" ? blockTexture : blockTexture, 
                         new Rectangle((int)obj.Position.X + (int)frame.OffsetX, (int)obj.Position.Y + (int)frame.OffsetY, (int)frame.Width, (int)frame.Height), 
                         Color.White
                     );
@@ -105,7 +105,7 @@ namespace Tetra.Desktop
             while (RectanglesToRender.Count > 0)
             {
                 var rectangle = RectanglesToRender.Dequeue();
-                DrawBorder(rectangle, 50, Color.Green, spriteBatch);
+                DrawBorder(rectangle, 2, Color.Green, spriteBatch);
             }
 
             spriteBatchUi.DrawString(SpriteFont, $"mouse {Mouse.ScreenPosition.X}, {Mouse.ScreenPosition.Y}", new Vector2(50, 50), Color.White);

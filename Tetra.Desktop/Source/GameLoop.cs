@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Tetra.Desktop
 {
-    public class GameLoop
+    public class GameLoop : IAddToWorld
     {
         public List<GameObject> GameObjects = new List<GameObject>();
         private readonly Camera Camera;
@@ -16,7 +16,7 @@ namespace Tetra.Desktop
             quadtree = new QuadTree(new Rectangle(-11000, -7000, 23000, 15000), 50, 5);
 
             GameObjects.Add(new Player());
-            GameObjects.Add(new MouseCursor(mouseInfo));
+            GameObjects.Add(new MouseCursor(this, mouseInfo));
         }
 
         public void Update(float elapsed)
@@ -53,7 +53,7 @@ namespace Tetra.Desktop
                     CheckCollisions(CollisionDirection.Horizontal, collider);
                 }
 
-                //GameObject.Animation.Update();
+                GameObject.Animation.Update();
             }
 
             quadtree.DrawDebug();
@@ -73,6 +73,11 @@ namespace Tetra.Desktop
                 else
                     source.IsCollidingHorizontally(targets[i]);
             }
+        }
+
+        public void Add(GameObject gameObject)
+        {
+            GameObjects.Add(gameObject);
         }
 
         public enum CollisionDirection

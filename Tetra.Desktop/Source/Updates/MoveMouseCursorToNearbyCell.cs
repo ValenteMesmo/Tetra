@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-
-namespace Tetra.Desktop
+﻿namespace Tetra.Desktop
 {
     public class MoveMouseCursorToNearbyCell : IHandleUpdates
     {
@@ -17,10 +14,7 @@ namespace Tetra.Desktop
 
         public void Update()
         {
-            cursor.Position = new Vector2(
-                (float)(Math.Floor(mouse.WorldPosition.X / size) * size),
-                (float)(Math.Floor(mouse.WorldPosition.Y / size) * size)
-            );
+            cursor.Position = mouse.GetCellPosition();
         }
     }
 }

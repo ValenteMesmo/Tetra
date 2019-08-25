@@ -3,11 +3,6 @@ using System;
 
 namespace Tetra.Desktop
 {
-    public interface IHandleCollisions
-    {
-        void Collide(Collider Source, Collider Target);
-    }
-
     public class Collider
     {
         public float OffsetX;
@@ -31,6 +26,9 @@ namespace Tetra.Desktop
         private IHandleCollisions _RightCollision = No.Collision;
         public IHandleCollisions RightCollision { get => _RightCollision; set { _RightCollision = value; IsDumb = false; } }
 
+        private IHandleCollisions _AnyCollision = No.Collision;
+        public IHandleCollisions AnyCollision { get => _AnyCollision; set { _AnyCollision = value; IsDumb = false; } }
+
         public IHandleUpdates BeforeCollisions { get; set; } = No.Update;
 
         public Collider(GameObject Parent)
@@ -40,5 +38,7 @@ namespace Tetra.Desktop
 
         public Rectangle AsRectangle() =>
             new Rectangle((int)this.RelativeX(), (int)this.RelativeY(), (int)Width, (int)Height);
+
+        public override string ToString() => $"({Parent.Position.X + OffsetX}, {Parent.Position.Y + OffsetY}) {Parent.GetType().Name}";
     }
 }

@@ -43,14 +43,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Player.cs" />
+    <Compile Include="Source\Animations\AnimationFrame.cs" />
+    <Compile Include="Source\Animations\IHandleAnimations.cs" />
+    <Compile Include="Source\GameObjects\AddBlockOnMouseClick.cs" />
+    <Compile Include="Source\GameObjects\Block.cs" />
+    <Compile Include="Source\GameObjects\CollisionsKeeper.cs" />
+    <Compile Include="Source\GameObjects\IAddToWorld.cs" />
+    <Compile Include="Source\GameObjects\MouseCursor.cs" />
+    <Compile Include="Source\Animations\SimpleAnimation.cs" />
+    <Compile Include="Source\GameObjects\UpdateAggregation.cs" />
+    <Compile Include="Source\Physics\IHandleCollisions.cs" />
     <Compile Include="Source\Updates\IHandleUpdates.cs" />
     <Compile Include="Source\Constants\No.cs" />
+    <Compile Include="Source\Updates\MouseInfoExtensions.cs" />
     <Compile Include="Source\Updates\MoveMouseCursorToNearbyCell.cs" />
     <Compile Include="Source\Physics\Collider.cs" />
     <Compile Include="Source\Physics\ColliderExtensions.cs" />
     <Compile Include="Source\Constants\GameConstants.cs" />
     <Compile Include="Source\GameLoop.cs" />
-    <Compile Include="Source\GameObject.cs" />
+    <Compile Include="Source\GameObjects\GameObject.cs" />
     <Compile Include="Source\Camera\Camera.cs" />
     <Compile Include="Source\Camera\CameraKeyboardControls.cs" />
     <Compile Include="Source\Camera\CameraMoveWithMouse.cs" />
@@ -59,7 +70,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Physics\QuadTree.cs" />
-    <Compile Include="Source\WorldPieceAdder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

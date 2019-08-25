@@ -12,9 +12,15 @@
                 && b.Top() <= a.Bottom())
             {
                 if (a.Right() - b.Right() > 0)
+                {
                     a.LeftCollision.Collide(a, b);
+                    a.AnyCollision.Collide(a, b);
+                }
                 else if (a.Right() - b.Right() < 0)
+                {
                     a.RightCollision.Collide(a, b);
+                    a.AnyCollision.Collide(a, b);
+                }
             }
         }
 
@@ -29,9 +35,15 @@
                 && b.Top() <= a.Bottom())
             {
                 if (a.Bottom() - b.Bottom() > 0)
+                {
                     a.TopCollision.Collide(a, b);
+                    a.AnyCollision.Collide(a, b);
+                }
                 else if (a.Bottom() - b.Bottom() < 0)
+                {
                     a.BotCollision.Collide(a, b);
+                    a.AnyCollision.Collide(a, b);
+                }
             }
         }
 
