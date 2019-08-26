@@ -72,7 +72,6 @@ namespace Tetra.Desktop
 
             base.Update(gameTime);
         }
-        const float size = 100;
 
         protected override void Draw(GameTime gameTime)
         {
