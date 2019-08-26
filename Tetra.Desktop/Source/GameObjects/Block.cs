@@ -8,10 +8,22 @@ namespace Tetra.Desktop
 
         public Block()
         {
-            Collider = new Collider(this) {
-                Width = GameConstants.BLOCK_SIZE, 
+            Collider = new Collider(this)
+            {
+                Width = GameConstants.BLOCK_SIZE,
                 Height = GameConstants.BLOCK_SIZE
             };
+
+            Animation = new SimpleAnimation(
+                new AnimationFrame(
+                    this, 
+                    "block", 
+                    0, 
+                    0, 
+                    GameConstants.BLOCK_SIZE, 
+                    GameConstants.BLOCK_SIZE
+                )
+            );
         }
 
         public override IEnumerable<Collider> GetColliders()
