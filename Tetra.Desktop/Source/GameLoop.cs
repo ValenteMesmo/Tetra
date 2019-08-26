@@ -56,7 +56,7 @@ namespace Tetra.Desktop
                 GameObject.Animation.Update();
             }
 
-            quadtree.DrawDebug();
+            //quadtree.DrawDebug();
         }
 
         private void CheckCollisions(CollisionDirection direction, Collider source)
