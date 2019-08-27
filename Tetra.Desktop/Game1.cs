@@ -48,7 +48,7 @@ namespace Tetra.Desktop
 
             Mouse = new MouseInfo(Camera);
 
-            GameLoop = new GameLoop(Camera, Mouse);
+            GameLoop = new GameLoop(new WorldEditor(Mouse));
         }
 
         protected override void UnloadContent()
@@ -87,7 +87,7 @@ namespace Tetra.Desktop
                    Camera.Transform
                );
 
-            foreach (var obj in GameLoop.GameObjects)
+            foreach (var obj in GameLoop.GetGameObjects())
                 foreach (var frame in obj.Animation.GetFrame())
                     spriteBatch.Draw(
                         frame.Texture == "cursor" ? blockTexture : blockTexture, 

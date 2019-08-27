@@ -9,8 +9,8 @@ namespace Tetra.Desktop
         public Vector2 Position;
         public Vector2 Velocity;
 
-        public IHandleUpdates Update { get; protected set; } = No.Update;
-        public IHandleAnimations Animation { get; protected set; } = No.Animation;
+        public IHandleUpdates Update { get; set; } = No.Update;
+        public IHandleAnimations Animation { get; set; } = No.Animation;
         public virtual IEnumerable<Collider> GetColliders() => No.Colliders;
     }
 }

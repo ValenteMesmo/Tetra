@@ -1,34 +1,122 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Tetra.Desktop
 {
-    public class GameLoop : IAddToWorld
+    public class ActualWorld : GameWorld
     {
         public List<GameObject> GameObjects = new List<GameObject>();
-        private readonly Camera Camera;
-        public readonly QuadTree quadtree;
 
-        public GameLoop(Camera Camera, MouseInfo mouseInfo)
+        public void AddObject(GameObject Object)
         {
-            this.Camera = Camera;
-            quadtree = new QuadTree(new Rectangle(-11000, -7000, 23000, 15000), 50, 5);
+            GameObjects.Add(Object);
+        }
 
+        public void AddRange(IEnumerable<GameObject> Objects)
+        {
+            GameObjects.AddRange(Objects);
+        }
+
+        public IReadOnlyList<GameObject> GetObjects()
+        {
+            return GameObjects;
+        }
+
+        public void Clear()
+        {
+            GameObjects.Clear();
+        }
+    }
+
+    public interface GameWorld
+    {
+        IReadOnlyList<GameObject> GetObjects();
+        void AddObject(GameObject Object);
+    }
+
+    public class ChangeToGameMode : IHandleUpdates
+    {
+        private readonly WorldEditor editor;
+
+        public ChangeToGameMode(WorldEditor editor)
+        {
+            this.editor = editor;
+        }
+
+        public void Update()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.F1) )
+            {
+                editor.Play();
+            }
+        }
+    }
+
+    public class WorldEditor : GameWorld
+    {
+        public List<GameObject> GameObjects = new List<GameObject>();
+        public ActualWorld ActualWorld = new ActualWorld();
+        private bool playing;
+
+        public WorldEditor(MouseInfo mouseInfo)
+        {
             GameObjects.Add(new Player());
             GameObjects.Add(new MouseCursor(this, mouseInfo));
+            GameObjects.Add(new GameObject { Update = new ChangeToGameMode(this) });
+        }
+
+        public void Play()
+        {
+            ActualWorld.Clear();
+            ActualWorld.AddRange(GameObjects.OfType<Block>());
+            playing = true;
+        }
+
+        public void Pause()
+        {
+            playing = false;
+        }
+
+        public void AddObject(GameObject Object)
+        {
+            if (playing)
+                ActualWorld.AddObject(Object);
+            else
+                GameObjects.Add(Object);
+        }
+
+        public IReadOnlyList<GameObject> GetObjects()
+        {
+            if (playing)
+                return ActualWorld.GameObjects;
+            return GameObjects;
+        }
+    }
+
+    public class GameLoop
+    {
+        public readonly QuadTree quadtree;
+        private readonly GameWorld World;
+
+        public GameLoop(GameWorld World)
+        {
+            quadtree = new QuadTree(new Rectangle(-11000, -7000, 23000, 15000), 50, 5);
+            this.World = World;
         }
 
         public void Update(float elapsed)
         {
             quadtree.Clear();
 
-            for (int i = 0; i < GameObjects.Count; i++)
-            {
-                quadtree.AddRange(GameObjects[i].GetColliders());
-            }
+            var GameObjects = World.GetObjects().ToList();
 
-            foreach (var GameObject in GameObjects.ToList())
+            for (int i = 0; i < GameObjects.Count; i++)
+                quadtree.AddRange(GameObjects[i].GetColliders());
+
+            foreach (var GameObject in GameObjects)
             {
                 GameObject.Update.Update();
 
@@ -75,9 +163,9 @@ namespace Tetra.Desktop
             }
         }
 
-        public void Add(GameObject gameObject)
+        public IReadOnlyList<GameObject> GetGameObjects()
         {
-            GameObjects.Add(gameObject);
+            return World.GetObjects();
         }
 
         public enum CollisionDirection

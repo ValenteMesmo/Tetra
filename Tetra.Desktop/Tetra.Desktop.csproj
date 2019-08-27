@@ -48,7 +48,6 @@
     <Compile Include="Source\GameObjects\AddBlockOnMouseClick.cs" />
     <Compile Include="Source\GameObjects\Block.cs" />
     <Compile Include="Source\GameObjects\CollisionsKeeper.cs" />
-    <Compile Include="Source\GameObjects\IAddToWorld.cs" />
     <Compile Include="Source\GameObjects\MouseCursor.cs" />
     <Compile Include="Source\Animations\SimpleAnimation.cs" />
     <Compile Include="Source\GameObjects\UpdateAggregation.cs" />

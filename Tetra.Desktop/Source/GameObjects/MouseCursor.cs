@@ -7,7 +7,7 @@ namespace Tetra.Desktop
     {
         private readonly Collider Collider;
 
-        public MouseCursor(IAddToWorld world, MouseInfo mouse)
+        public MouseCursor(GameWorld world, MouseInfo mouse)
         {
             var collisionKeeper = new CollisionsKeeper();
 
