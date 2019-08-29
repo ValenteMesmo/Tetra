@@ -85,12 +85,12 @@ namespace Tetra.Desktop
                    null,
                    Camera.Transform
                );
-
-            foreach (var obj in GameLoop.GetGameObjects())
+            var gameObjects = GameLoop.GetGameObjects();
+            foreach (var obj in gameObjects)
                 foreach (var frame in obj.Animation.GetFrame())
                     spriteBatch.Draw(
-                        Texture[frame.Texture], 
-                        new Rectangle((int)obj.Position.X + (int)frame.OffsetX, (int)obj.Position.Y + (int)frame.OffsetY, (int)frame.Width, (int)frame.Height), 
+                        Texture[frame.Texture],
+                        new Rectangle((int)obj.Position.X + (int)frame.OffsetX, (int)obj.Position.Y + (int)frame.OffsetY, (int)frame.Width, (int)frame.Height),
                         Color.White
                     );
 
@@ -109,6 +109,7 @@ namespace Tetra.Desktop
             spriteBatchUi.DrawString(SpriteFont, $"mouse {Mouse.ScreenPosition.X}, {Mouse.ScreenPosition.Y}", new Vector2(50, 50), Color.White);
             spriteBatchUi.DrawString(SpriteFont, $"world {Mouse.WorldPosition.X}, {Mouse.WorldPosition.Y}", new Vector2(50, 100), Color.White);
             spriteBatchUi.DrawString(SpriteFont, $"camera {Camera.Position.X}, {Camera.Position.Y}", new Vector2(50, 150), Color.White);
+            spriteBatchUi.DrawString(SpriteFont, $"objects {gameObjects.Count}", new Vector2(50, 200), Color.White);
 
             spriteBatch.End();
             spriteBatchUi.End();

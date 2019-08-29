@@ -19,7 +19,9 @@ namespace Tetra.Desktop
         {
             if (mouse.LeftButtonPressed && parentCollisions.Collisions.Any() == false)
             {
-                World.AddObject(new Block { Position = mouse.GetCellPosition() });
+                var position = mouse.GetCellPosition();
+                World.AddObject(
+                    new EditorObject(() => new Block() { Position = position }) { Position = position });
             }
         }
     }

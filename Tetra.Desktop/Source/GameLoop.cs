@@ -5,6 +5,29 @@ using System.Linq;
 
 namespace Tetra.Desktop
 {
+    public class EditorObject : GameObject
+    {
+        private readonly Func<GameObject> Factory;
+        private readonly IEnumerable<Collider> Colliders;
+
+        public EditorObject(Func<GameObject> Factory)
+        {
+            this.Factory = Factory;
+            var temp = Factory();
+            Animation = temp.Animation;
+            Colliders = temp.GetColliders();
+        }
+
+        public override IEnumerable<Collider> GetColliders() => Colliders;
+
+        public GameObject Create()
+        {
+            var obj = Factory();
+            obj.Position = Position;
+            return obj;
+        }
+    }
+
     public interface World
     {
         IReadOnlyList<GameObject> GetObjects();
@@ -13,21 +36,21 @@ namespace Tetra.Desktop
 
     public class EditorWorld : World
     {
-        public List<GameObject> GameObjects = new List<GameObject>();
+        public List<GameObject> EditorObjects = new List<GameObject>();
         public GameWorld GameWorld = new GameWorld();
         private bool playing;
 
         public EditorWorld(MouseInfo mouseInfo)
         {
-            GameObjects.Add(new Player());
-            GameObjects.Add(new MouseCursor(this, mouseInfo));
-            GameObjects.Add(new GameObject { Update = new ChangeToGameMode(this) });
+            EditorObjects.Add(new EditorObject(() => new Player()));
+            EditorObjects.Add(new GameObject { Update = new ChangeToGameMode(this) });
+            EditorObjects.Add(new MouseCursor(this, mouseInfo));
         }
 
         public void Play()
         {
             GameWorld.Clear();
-            GameWorld.AddRange(GameObjects.OfType<Block>());
+            GameWorld.AddRange(EditorObjects.OfType<EditorObject>().Select(f => f.Create()));
             GameWorld.AddObject(new GameObject { Update = new ChangeToEditorMode(this) });
 
             playing = true;
@@ -43,7 +66,7 @@ namespace Tetra.Desktop
             if (playing)
                 GameWorld.AddObject(Object);
             else
-                GameObjects.Add(Object);
+                EditorObjects.Add(Object);
         }
 
         public IReadOnlyList<GameObject> GetObjects()
@@ -51,7 +74,7 @@ namespace Tetra.Desktop
             if (playing)
                 return GameWorld.GameObjects;
 
-            return GameObjects;
+            return EditorObjects;
         }
     }
 
@@ -128,7 +151,7 @@ namespace Tetra.Desktop
                 GameObject.Animation.Update();
             }
 
-            //quadtree.DrawDebug();
+            quadtree.DrawDebug();
         }
 
         private void CheckCollisions(CollisionDirection direction, Collider source)
