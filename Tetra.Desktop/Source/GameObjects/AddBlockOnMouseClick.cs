@@ -6,9 +6,9 @@ namespace Tetra.Desktop
     {
         private readonly MouseInfo mouse;
         private readonly CollisionsKeeper parentCollisions;
-        private readonly GameWorld World;
+        private readonly World World;
 
-        public AddBlockOnMouseClick(MouseInfo mouse, CollisionsKeeper parentCollisions, GameWorld World)
+        public AddBlockOnMouseClick(MouseInfo mouse, CollisionsKeeper parentCollisions, World World)
         {
             this.mouse = mouse;
             this.parentCollisions = parentCollisions;

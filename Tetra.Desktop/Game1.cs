@@ -48,7 +48,7 @@ namespace Tetra.Desktop
 
             Mouse = new MouseInfo(Camera);
 
-            GameLoop = new GameLoop(new WorldEditor(Mouse));
+            GameLoop = new GameLoop(new EditorWorld(Mouse));
         }
 
         protected override void UnloadContent()

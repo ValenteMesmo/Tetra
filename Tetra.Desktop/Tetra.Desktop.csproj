@@ -45,6 +45,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Source\Animations\AnimationFrame.cs" />
     <Compile Include="Source\Animations\IHandleAnimations.cs" />
+    <Compile Include="Source\Updates\ChangeToGameMode.cs" />
     <Compile Include="Source\GameObjects\AddBlockOnMouseClick.cs" />
     <Compile Include="Source\GameObjects\Block.cs" />
     <Compile Include="Source\GameObjects\CollisionsKeeper.cs" />

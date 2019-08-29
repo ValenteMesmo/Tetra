@@ -1,12 +1,61 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Tetra.Desktop
 {
-    public class ActualWorld : GameWorld
+    public interface World
+    {
+        IReadOnlyList<GameObject> GetObjects();
+        void AddObject(GameObject Object);
+    }
+
+    public class EditorWorld : World
+    {
+        public List<GameObject> GameObjects = new List<GameObject>();
+        public GameWorld GameWorld = new GameWorld();
+        private bool playing;
+
+        public EditorWorld(MouseInfo mouseInfo)
+        {
+            // GameObjects.Add(new Player());
+            GameObjects.Add(new MouseCursor(this, mouseInfo));
+            GameObjects.Add(new GameObject { Update = new ChangeToGameMode(this) });
+        }
+
+        public void Play()
+        {
+            GameWorld.Clear();
+            GameWorld.AddRange(GameObjects.OfType<Block>());
+            GameWorld.AddObject(new GameObject { Update = new ChangeToEditorMode(this) });
+
+            playing = true;
+        }
+
+        public void Pause()
+        {
+            playing = false;
+        }
+
+        public void AddObject(GameObject Object)
+        {
+            if (playing)
+                GameWorld.AddObject(Object);
+            else
+                GameObjects.Add(Object);
+        }
+
+        public IReadOnlyList<GameObject> GetObjects()
+        {
+            if (playing)
+                return GameWorld.GameObjects;
+
+            return GameObjects;
+        }
+    }
+
+    public class GameWorld : World
     {
         public List<GameObject> GameObjects = new List<GameObject>();
 
@@ -31,77 +80,12 @@ namespace Tetra.Desktop
         }
     }
 
-    public interface GameWorld
-    {
-        IReadOnlyList<GameObject> GetObjects();
-        void AddObject(GameObject Object);
-    }
-
-    public class ChangeToGameMode : IHandleUpdates
-    {
-        private readonly WorldEditor editor;
-
-        public ChangeToGameMode(WorldEditor editor)
-        {
-            this.editor = editor;
-        }
-
-        public void Update()
-        {
-            if (Keyboard.GetState().IsKeyDown(Keys.F1) )
-            {
-                editor.Play();
-            }
-        }
-    }
-
-    public class WorldEditor : GameWorld
-    {
-        public List<GameObject> GameObjects = new List<GameObject>();
-        public ActualWorld ActualWorld = new ActualWorld();
-        private bool playing;
-
-        public WorldEditor(MouseInfo mouseInfo)
-        {
-            GameObjects.Add(new Player());
-            GameObjects.Add(new MouseCursor(this, mouseInfo));
-            GameObjects.Add(new GameObject { Update = new ChangeToGameMode(this) });
-        }
-
-        public void Play()
-        {
-            ActualWorld.Clear();
-            ActualWorld.AddRange(GameObjects.OfType<Block>());
-            playing = true;
-        }
-
-        public void Pause()
-        {
-            playing = false;
-        }
-
-        public void AddObject(GameObject Object)
-        {
-            if (playing)
-                ActualWorld.AddObject(Object);
-            else
-                GameObjects.Add(Object);
-        }
-
-        public IReadOnlyList<GameObject> GetObjects()
-        {
-            if (playing)
-                return ActualWorld.GameObjects;
-            return GameObjects;
-        }
-    }
-
     public class GameLoop
     {
         public readonly QuadTree quadtree;
-        private readonly GameWorld World;
+        private readonly World World;
 
-        public GameLoop(GameWorld World)
+        public GameLoop(World World)
         {
             quadtree = new QuadTree(new Rectangle(-11000, -7000, 23000, 15000), 50, 5);
             this.World = World;
