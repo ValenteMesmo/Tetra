@@ -19,7 +19,7 @@ namespace Tetra.Desktop
 
         public EditorWorld(MouseInfo mouseInfo)
         {
-            // GameObjects.Add(new Player());
+            GameObjects.Add(new Player());
             GameObjects.Add(new MouseCursor(this, mouseInfo));
             GameObjects.Add(new GameObject { Update = new ChangeToGameMode(this) });
         }

@@ -10,12 +10,10 @@ namespace Tetra.Desktop
         public static Queue<Rectangle> RectanglesToRender = new Queue<Rectangle>();
         public static Queue<Rectangle> RectanglesToRenderUI = new Queue<Rectangle>();
 
+        private Dictionary<string, Texture2D> Texture = new Dictionary<string, Texture2D>();
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private SpriteBatch spriteBatchUi;
-        private Texture2D blockTexture;
-        private Texture2D playerTexture;
-        private Texture2D pixel;
         private SpriteFont SpriteFont;
         private Camera Camera;
         private MouseInfo Mouse;
@@ -39,10 +37,11 @@ namespace Tetra.Desktop
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteBatchUi = new SpriteBatch(GraphicsDevice);
 
-            blockTexture = Content.Load<Texture2D>("tiles/floor");
-            playerTexture = Content.Load<Texture2D>("tiles/player");
-            pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            Texture.Add("block", Content.Load<Texture2D>("tiles/floor"));
+            Texture.Add("player", Content.Load<Texture2D>("tiles /player"));
+            var pixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             pixel.SetData(new[] { Color.White });
+            Texture.Add("pixel", pixel);
 
             SpriteFont = Content.Load<SpriteFont>("SpriteFont");
 
@@ -90,7 +89,7 @@ namespace Tetra.Desktop
             foreach (var obj in GameLoop.GetGameObjects())
                 foreach (var frame in obj.Animation.GetFrame())
                     spriteBatch.Draw(
-                        frame.Texture == "cursor" ? blockTexture : blockTexture, 
+                        Texture[frame.Texture], 
                         new Rectangle((int)obj.Position.X + (int)frame.OffsetX, (int)obj.Position.Y + (int)frame.OffsetY, (int)frame.Width, (int)frame.Height), 
                         Color.White
                     );
@@ -119,10 +118,10 @@ namespace Tetra.Desktop
 
         private void DrawBorder(Rectangle rectangleToDraw, int thicknessOfBorder, Color borderColor, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, rectangleToDraw.Width, thicknessOfBorder), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(pixel, new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder), rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder, rectangleToDraw.Width, thicknessOfBorder), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture["pixel"], new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, rectangleToDraw.Width, thicknessOfBorder), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture["pixel"], new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture["pixel"], new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder), rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture["pixel"], new Rectangle(rectangleToDraw.X, rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder, rectangleToDraw.Width, thicknessOfBorder), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
         }
     }
 }

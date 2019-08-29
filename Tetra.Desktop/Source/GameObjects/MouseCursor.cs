@@ -29,7 +29,7 @@ namespace Tetra.Desktop
             Animation = new SimpleAnimation(
                 new AnimationFrame(
                     this,
-                    "cursor",
+                    "block",
                     0,
                     0,
                     GameConstants.BLOCK_SIZE,
