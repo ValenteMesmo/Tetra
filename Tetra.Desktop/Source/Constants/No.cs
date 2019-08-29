@@ -17,7 +17,7 @@ namespace Tetra.Desktop
 
         private class NoCollision : IHandleCollisions
         {
-            public void Collide(Collider Source, Collider Target) { }
+            public void Collide(Collider Source, CollisionDirection direction, Collider Target) { }
         }
 
         private class NoAnimation : IHandleAnimations

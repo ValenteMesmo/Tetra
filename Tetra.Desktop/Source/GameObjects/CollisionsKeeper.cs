@@ -7,14 +7,14 @@ namespace Tetra.Desktop
         public IEnumerable<Collider> Collisions => _collisions;
         private List<Collider> _collisions = new List<Collider>();
 
-        public void Collide(Collider Source, Collider Target)
-        {
-            _collisions.Add(Target);
-        }
-
         public void Update()
         {
             _collisions.Clear();
+        }
+
+        public void Collide(Collider Source, CollisionDirection direction, Collider Target)
+        {
+            _collisions.Add(Target);
         }
     }
 }

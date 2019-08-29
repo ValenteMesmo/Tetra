@@ -14,20 +14,8 @@ namespace Tetra.Desktop
 
         public bool IsDumb { get; private set; } = true;
 
-        private IHandleCollisions _TopCollision = No.Collision;
-        public IHandleCollisions TopCollision { get => _TopCollision; set { _TopCollision = value; IsDumb = false; } }
-
-        private IHandleCollisions _LeftCollision = No.Collision;
-        public IHandleCollisions LeftCollision { get => _LeftCollision; set { _LeftCollision = value; IsDumb = false; } }
-
-        private IHandleCollisions _BotCollision = No.Collision;
-        public IHandleCollisions BotCollision { get => _BotCollision; set { _BotCollision = value; IsDumb = false; } }
-
-        private IHandleCollisions _RightCollision = No.Collision;
-        public IHandleCollisions RightCollision { get => _RightCollision; set { _RightCollision = value; IsDumb = false; } }
-
-        private IHandleCollisions _AnyCollision = No.Collision;
-        public IHandleCollisions AnyCollision { get => _AnyCollision; set { _AnyCollision = value; IsDumb = false; } }
+        private IHandleCollisions _Collision = No.Collision;
+        public IHandleCollisions Collision { get => _Collision; set { _Collision = value; IsDumb = false; } }
 
         public IHandleUpdates BeforeCollisions { get; set; } = No.Update;
 

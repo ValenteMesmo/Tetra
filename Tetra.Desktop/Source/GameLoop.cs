@@ -136,7 +136,7 @@ namespace Tetra.Desktop
                     if (collider.IsDumb)
                         continue;
 
-                    CheckCollisions(CollisionDirection.Vertical, collider);
+                    CheckCollisions(InternalCollisionDirection.Vertical, collider);
                 }
 
                 GameObject.Position.X += GameObject.Velocity.X * elapsed;
@@ -145,7 +145,7 @@ namespace Tetra.Desktop
                     if (collider.IsDumb)
                         continue;
 
-                    CheckCollisions(CollisionDirection.Horizontal, collider);
+                    CheckCollisions(InternalCollisionDirection.Horizontal, collider);
                 }
 
                 GameObject.Animation.Update();
@@ -154,7 +154,7 @@ namespace Tetra.Desktop
             quadtree.DrawDebug();
         }
 
-        private void CheckCollisions(CollisionDirection direction, Collider source)
+        private void CheckCollisions(InternalCollisionDirection direction, Collider source)
         {
             var targets = quadtree.Get(source);
 
@@ -163,7 +163,7 @@ namespace Tetra.Desktop
                 if (source.Parent == targets[i].Parent)
                     continue;
 
-                if (direction == CollisionDirection.Vertical)
+                if (direction == InternalCollisionDirection.Vertical)
                     source.IsCollidingVertically(targets[i]);
                 else
                     source.IsCollidingHorizontally(targets[i]);
@@ -175,7 +175,7 @@ namespace Tetra.Desktop
             return World.GetObjects();
         }
 
-        public enum CollisionDirection
+        public enum InternalCollisionDirection
         {
             Horizontal,
             Vertical
