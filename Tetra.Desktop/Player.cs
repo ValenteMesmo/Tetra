@@ -1,7 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Tetra.Desktop
 {
+    public class MovesUsingKeyboard : IHandleUpdates
+    {
+        private readonly GameObject Parent;
+
+        public MovesUsingKeyboard(GameObject Parent)
+        {
+            this.Parent = Parent;
+        }
+
+        public void Update()
+        {
+            var keyboard = Keyboard.GetState();
+
+            if (keyboard.IsKeyDown(Keys.A))
+                Parent.Velocity.X = -5;
+            else if (keyboard.IsKeyDown(Keys.D))
+                Parent.Velocity.X = 5;
+            else
+                Parent.Velocity.X = 0;
+        }
+    }
+
     public class Player : GameObject
     {
         private readonly Collider Collider;
@@ -9,7 +32,13 @@ namespace Tetra.Desktop
         public Player()
         {
             Animation = new SimpleAnimation(new AnimationFrame(this, "player", 0, 0, GameConstants.BLOCK_SIZE, GameConstants.BLOCK_SIZE * 2));
-            Collider = new Collider(this) { Width = GameConstants.BLOCK_SIZE, Height = GameConstants.BLOCK_SIZE * 2 };
+            Collider = new Collider(this)
+            {
+                Width = GameConstants.BLOCK_SIZE,
+                Height = GameConstants.BLOCK_SIZE * 2,
+                Collision = new BlockCollisionHandler()
+            };
+            Update = new MovesUsingKeyboard(this);
         }
 
         public override IEnumerable<Collider> GetColliders()
