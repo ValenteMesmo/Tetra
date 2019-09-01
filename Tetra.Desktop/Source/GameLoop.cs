@@ -1,10 +1,61 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Tetra.Desktop
 {
+    public class CollisionDebugToggler : IHandleUpdates
+    {
+        private readonly World world;
+        private readonly CooldownTracker cooldown;
+
+        public CollisionDebugToggler(World world, CooldownTracker cooldown)
+        {
+            this.world = world;
+            this.cooldown = cooldown;
+        }
+
+        public void Update()
+        {
+            cooldown.Update();
+            var keyboard = Keyboard.GetState();
+            if (keyboard.IsKeyDown(Keys.F2) && cooldown.IsOver())
+            {
+                cooldown.Start();
+                world.RenderColliders = !world.RenderColliders;
+            }
+        }
+    }
+
+    public class CooldownTracker : IHandleUpdates
+    {
+        private int Count = 0;
+        private readonly int Duration;
+
+        public CooldownTracker(int Duration)
+        {
+            this.Duration = Duration;
+        }
+
+        public void Start()
+        {
+            Count = Duration;
+        }
+
+        public bool IsOver()
+        {
+            return Count == 0;
+        }
+
+        public void Update()
+        {
+            if (Count > 0)
+                Count--;
+        }
+    }
+
     public class EditorObject : GameObject
     {
         private readonly Func<GameObject> Factory;
@@ -30,6 +81,8 @@ namespace Tetra.Desktop
 
     public interface World
     {
+        bool RenderColliders { get; set; }
+
         IReadOnlyList<GameObject> GetObjects();
         void AddObject(GameObject Object);
     }
@@ -40,10 +93,13 @@ namespace Tetra.Desktop
         public GameWorld GameWorld = new GameWorld();
         private bool playing;
 
+        public bool RenderColliders { get => GameWorld.RenderColliders; set => GameWorld.RenderColliders = value; }
+
         public EditorWorld(MouseInfo mouseInfo)
         {
             EditorObjects.Add(new EditorObject(() => new Player()));
-            EditorObjects.Add(new GameObject { Update = new ChangeToGameMode(this) });
+            EditorObjects.Add(new GameObject { Update = new ChangeToGameMode(this, new CooldownTracker(30)) });
+            EditorObjects.Add(new GameObject { Update = new CollisionDebugToggler(this, new CooldownTracker(30)) });            
             EditorObjects.Add(new MouseCursor(this, mouseInfo));
         }
 
@@ -51,7 +107,8 @@ namespace Tetra.Desktop
         {
             GameWorld.Clear();
             GameWorld.AddRange(EditorObjects.OfType<EditorObject>().Select(f => f.Create()));
-            GameWorld.AddObject(new GameObject { Update = new ChangeToEditorMode(this) });
+            GameWorld.AddObject(new GameObject { Update = new ChangeToEditorMode(this, new CooldownTracker(30)) });
+            GameWorld.AddObject(new GameObject { Update = new CollisionDebugToggler(this, new CooldownTracker(30)) });
 
             playing = true;
         }
@@ -80,6 +137,7 @@ namespace Tetra.Desktop
 
     public class GameWorld : World
     {
+        public bool RenderColliders { get; set; } = true;
         public List<GameObject> GameObjects = new List<GameObject>();
 
         public void AddObject(GameObject Object)
@@ -106,7 +164,7 @@ namespace Tetra.Desktop
     public class GameLoop
     {
         public readonly QuadTree quadtree;
-        private readonly World World;
+        public readonly World World;
 
         public GameLoop(World World)
         {

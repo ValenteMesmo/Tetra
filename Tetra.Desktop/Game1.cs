@@ -94,17 +94,19 @@ namespace Tetra.Desktop
                         Color.White
                     );
 
-            while (RectanglesToRenderUI.Count > 0)
-            {
-                var rectangle = RectanglesToRenderUI.Dequeue();
-                DrawBorder(rectangle, 2, Color.Red, spriteBatchUi);
-            }
+            if (GameLoop.World.RenderColliders)
+                while (RectanglesToRenderUI.Count > 0)
+                {
+                    var rectangle = RectanglesToRenderUI.Dequeue();
+                    DrawBorder(rectangle, 2, Color.Red, spriteBatchUi);
+                }
 
-            while (RectanglesToRender.Count > 0)
-            {
-                var rectangle = RectanglesToRender.Dequeue();
-                DrawBorder(rectangle, 2, Color.Green, spriteBatch);
-            }
+            if (GameLoop.World.RenderColliders)
+                while (RectanglesToRender.Count > 0)
+                {
+                    var rectangle = RectanglesToRender.Dequeue();
+                    DrawBorder(rectangle, 2, Color.Green, spriteBatch);
+                }
 
             spriteBatchUi.DrawString(SpriteFont, $"mouse {Mouse.ScreenPosition.X}, {Mouse.ScreenPosition.Y}", new Vector2(50, 50), Color.White);
             spriteBatchUi.DrawString(SpriteFont, $"world {Mouse.WorldPosition.X}, {Mouse.WorldPosition.Y}", new Vector2(50, 100), Color.White);
