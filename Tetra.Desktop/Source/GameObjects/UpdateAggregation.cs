@@ -2,7 +2,7 @@
 {
     public class UpdateAggregation : IHandleUpdates
     {
-        private readonly IHandleUpdates[] updates;
+        public readonly IHandleUpdates[] updates;
 
         public UpdateAggregation(params IHandleUpdates[] updates)
         {

@@ -42,6 +42,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MovesUsingKeyboard.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Source\Animations\AnimationFrame.cs" />
     <Compile Include="Source\Animations\IHandleAnimations.cs" />

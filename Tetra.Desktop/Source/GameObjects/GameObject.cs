@@ -11,6 +11,9 @@ namespace Tetra.Desktop
 
         public IHandleUpdates Update { get; set; } = No.Update;
         public IHandleAnimations Animation { get; set; } = No.Animation;
+        [Obsolete]
+        public bool FacingRight { get; internal set; }
+
         public virtual IEnumerable<Collider> GetColliders() => No.Colliders;
     }
 }

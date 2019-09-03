@@ -6,6 +6,24 @@ using System.Linq;
 
 namespace Tetra.Desktop
 {
+    public class GravityChangesVerticalSpeed : IHandleUpdates
+    {
+        private readonly GameObject GameObject;
+
+        public GravityChangesVerticalSpeed(GameObject GameObject)
+        {
+            this.GameObject = GameObject;
+        }
+
+        public void Update()
+        {
+            GameObject.Velocity.Y += 10;
+            if (GameObject.Velocity.Y > 150)
+                GameObject.Velocity.Y = 150;
+        }
+    }
+
+
     public class CollisionDebugToggler : IHandleUpdates
     {
         private readonly World world;
