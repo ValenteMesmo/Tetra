@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace Tetra.Desktop
@@ -83,25 +84,24 @@ namespace Tetra.Desktop
                 Target.Velocity.X += Speed;
         }
     }
-    //public enum ProcessState
-    //{
-    //    Idle,
-    //    WalkingRight,
-    //    WalkingLeft,
-    //    Falling,
-    //    Jumping
-    //}
 
-    public enum Command
+    public enum InputDirection
     {
+        None,
         Right,
         Left,
         Up,
-        Down,
+        Down
+    }
+
+    public enum InputAction
+    {
+        None,
         Attack,
         Defense,
         Jump
     }
+
     public interface IHaveState
     {
         int State { get; set; }
@@ -148,23 +148,67 @@ namespace Tetra.Desktop
         public void Update()
         {
             if (!Player.Grounded && Player.Velocity.Y > 0)
-            {
                 Player.State = PlayerState.FALLING;
-            }
         }
     }
-    public class ChangePlayerStateToIdle : IHandleUpdates
-    {
-        public readonly Player Player;
 
-        public ChangePlayerStateToIdle(Player Player)
+    public class UpdateInput : IHandleUpdates
+    {
+        private readonly GameInput Input;
+
+        public UpdateInput(GameInput Input)
         {
-            this.Player = Player;
+            this.Input = Input;
         }
 
         public void Update()
         {
-            if (Player.Grounded && Player.Inputs.Direction == DpadDirection.None)
+            var keyboard = Keyboard.GetState();
+
+            if (keyboard.IsKeyDown(Keys.A))
+                Input.Direction = InputDirection.Left;
+            else if (keyboard.IsKeyDown(Keys.D))
+                Input.Direction = InputDirection.Right;
+            else if (keyboard.IsKeyDown(Keys.W))
+                Input.Direction = InputDirection.Up;
+            else if (keyboard.IsKeyDown(Keys.S))
+                Input.Direction = InputDirection.Down;
+            else
+                Input.Direction = InputDirection.None;
+
+            if (keyboard.IsKeyDown(Keys.Space))
+                Input.Action = InputAction.Jump;
+            else
+                Input.Action = InputAction.None;
+        }
+    }
+
+    public class GameInput
+    {
+        public InputDirection Direction { get; set; }
+        public InputAction Action { get; set; }
+
+        public bool Up => Direction == InputDirection.Up;
+        public bool Down => Direction == InputDirection.Down;
+        public bool Left => Direction == InputDirection.Left;
+        public bool Right => Direction == InputDirection.Right;
+        public bool Jump => Action == InputAction.Jump;
+    }
+
+    public class ChangePlayerStateToIdle : IHandleUpdates
+    {
+        public readonly Player Player;
+        private readonly GameInput input;
+
+        public ChangePlayerStateToIdle(Player Player, GameInput input)
+        {
+            this.Player = Player;
+            this.input = input;
+        }
+
+        public void Update()
+        {
+            if (Player.Grounded && input.Direction == InputDirection.None)
                 Player.State = PlayerState.IDLE;
         }
     }
@@ -172,22 +216,24 @@ namespace Tetra.Desktop
     public class ChangePlayerStateToWalking : IHandleUpdates
     {
         public readonly Player Player;
+        private readonly GameInput input;
 
-        public ChangePlayerStateToWalking(Player Player)
+        public ChangePlayerStateToWalking(Player Player, GameInput input)
         {
             this.Player = Player;
+            this.input = input;
         }
 
         public void Update()
         {
             if (Player.Grounded)
             {
-                if (Player.Inputs.Direction == DpadDirection.Left)
+                if (input.Direction == InputDirection.Left)
                 {
                     Player.State = PlayerState.WALKING;
                     Player.FacingRight = false;
                 }
-                else if (Player.Inputs.Direction == DpadDirection.Right)
+                else if (input.Direction == InputDirection.Right)
                 {
                     Player.State = PlayerState.WALKING;
                     Player.FacingRight = true;
@@ -198,24 +244,28 @@ namespace Tetra.Desktop
     public class ChangePlayerStateToJumping : IHandleUpdates
     {
         public readonly Player Player;
+        private readonly GameInput input;
 
-        public ChangePlayerStateToJumping(Player Player)
+        public ChangePlayerStateToJumping(Player Player, GameInput input)
         {
             this.Player = Player;
+            this.input = input;
         }
 
         public void Update()
         {
-            if (Player.Grounded && Player.Inputs.Action == DpadAction.Jump)
+            if (Player.Grounded && input.Action == InputAction.Jump)
             {
                 Player.Velocity.Y = -200;
                 Player.State = PlayerState.JUMP;
             }
         }
     }
-    public class Player : GameObject
+    public class Player : GameObject, IHaveState
     {
         private readonly Collider Collider;
+        [Obsolete]
+        internal bool Grounded;
 
         public Player()
         {
@@ -226,15 +276,23 @@ namespace Tetra.Desktop
                 Height = GameConstants.BLOCK_SIZE * 2,
                 Collision = new BlockCollisionHandler()
             };
-            Update = new UpdateAggregation(new MovesUsingKeyboard(this) ,new GravityChangesVerticalSpeed(this));
+
+            var input = new GameInput();
+
+            Update = new UpdateAggregation(
+                new UpdateInput(input)
+                , CreateUpdatesByState(input)
+            );
         }
+
+        public int State { get; set; }
 
         public override IEnumerable<Collider> GetColliders()
         {
             yield return Collider;
         }
 
-        private UpdateByState CreateUpdatesByState(Command Inputs)
+        private UpdateByState CreateUpdatesByState(GameInput Inputs)
         {
             var attackCooldwon = new CooldownTracker(20);
             var HurtCooldwon = new CooldownTracker(10);
@@ -245,9 +303,9 @@ namespace Tetra.Desktop
             var gravityChangesVerticalSpeed = new GravityChangesVerticalSpeed(this);
 
             var ChangePlayerStateToFalling = new ChangePlayerStateToFalling(this);
-            var changePlayerToIdle = new ChangePlayerStateToIdle(this);
-            var changePlayerToWalking = new ChangePlayerStateToWalking(this);
-            var ChangePlayerToJumpingState = new ChangePlayerStateToJumping(this);
+            var changePlayerToIdle = new ChangePlayerStateToIdle(this, Inputs);
+            var changePlayerToWalking = new ChangePlayerStateToWalking(this, Inputs);
+            var ChangePlayerToJumpingState = new ChangePlayerStateToJumping(this, Inputs);
             //var changePlayerStateToCrouch = new ChangePlayerStateToCrouch(this);
             //var changePlayerStateToLookingUp = new ChangePlayerStateToLookingUp(this);
             //var ChangePlayerStateToAttack = new ChangePlayerStateToAttack(this, attackCooldwon);
@@ -263,19 +321,19 @@ namespace Tetra.Desktop
                 , ChangePlayerStateToFalling
                 , changePlayerToWalking
                 , ChangePlayerToJumpingState
-                //, changePlayerStateToCrouch
-                //, changePlayerStateToLookingUp
-                //, ChangePlayerStateToAttack
-                //, ChangePlayerStateToHurt
+            //, changePlayerStateToCrouch
+            //, changePlayerStateToLookingUp
+            //, ChangePlayerStateToAttack
+            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.FALLING, new UpdateAggregation(
                 gravityChangesVerticalSpeed
                 , changePlayerToWalking
                 , changePlayerToIdle
-                //, changePlayerStateToCrouch
-                //, changePlayerStateToLookingUp
-                //, ChangePlayerStateToHurt
+            //, changePlayerStateToCrouch
+            //, changePlayerStateToLookingUp
+            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.WALKING, new UpdateAggregation(
@@ -286,16 +344,16 @@ namespace Tetra.Desktop
                 , ChangePlayerToJumpingState
                 , ChangePlayerStateToFalling
                 , changePlayerToIdle
-                , changePlayerStateToCrouch
-                , changePlayerStateToLookingUp
-                , ChangePlayerStateToAttack
-                , ChangePlayerStateToHurt
+            //, changePlayerStateToCrouch
+            //, changePlayerStateToLookingUp
+            //, ChangePlayerStateToAttack
+            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.JUMP, new UpdateAggregation(
                 gravityChangesVerticalSpeed
                 , ChangePlayerStateToFalling
-                , ChangePlayerStateToHurt
+            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.CROUCH, new UpdateAggregation(
@@ -304,8 +362,8 @@ namespace Tetra.Desktop
                 , changePlayerToWalking
                 , changePlayerToIdle
                 , ChangePlayerStateToFalling
-                , changePlayerStateToLookingUp
-                , ChangePlayerStateToHurt
+            //, changePlayerStateToLookingUp
+            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.LOOKING_UP, new UpdateAggregation(
@@ -314,15 +372,15 @@ namespace Tetra.Desktop
                 , changePlayerToWalking
                 , changePlayerToIdle
                 , ChangePlayerStateToFalling
-                , changePlayerStateToCrouch
-                , ChangePlayerStateToHurt
+            //, changePlayerStateToCrouch
+            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.ATTACK, new UpdateAggregation(
                 gravityChangesVerticalSpeed
                 , decreaseVelocity
-                , ChangePlayerStateToAfterAttack
-                , ChangePlayerStateToHurt
+            //, ChangePlayerStateToAfterAttack
+            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.AFTER_ATTACK, new UpdateAggregation(
@@ -331,14 +389,14 @@ namespace Tetra.Desktop
                 , changePlayerToIdle
                 , changePlayerToWalking
                 , ChangePlayerStateToFalling
-                , changePlayerStateToCrouch
-                , ChangePlayerStateToHurt
+            //, changePlayerStateToCrouch
+            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.HURT, new UpdateAggregation(
                 gravityChangesVerticalSpeed
                 , decreaseVelocity
-                , ChangePlayerStateToAfterHurt
+            //, ChangePlayerStateToAfterHurt
             ));
 
             updateByState.Add(PlayerState.AFTER_HURT, new UpdateAggregation(
@@ -347,8 +405,8 @@ namespace Tetra.Desktop
                 , changePlayerToIdle
                 , changePlayerToWalking
                 , ChangePlayerStateToFalling
-                , changePlayerStateToCrouch
-                , ChangePlayerStateToHurt
+            //, changePlayerStateToCrouch
+            //, ChangePlayerStateToHurt
             ));
 
             return updateByState;
