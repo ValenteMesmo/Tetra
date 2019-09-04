@@ -9,6 +9,7 @@ namespace Tetra.Desktop
     {
         public static Queue<Rectangle> RectanglesToRender = new Queue<Rectangle>();
         public static Queue<Rectangle> RectanglesToRenderUI = new Queue<Rectangle>();
+        public static string Log;
 
         private Dictionary<string, Texture2D> Texture = new Dictionary<string, Texture2D>();
         private GraphicsDeviceManager graphics;
@@ -60,6 +61,8 @@ namespace Tetra.Desktop
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            Log = "";
+
             //update inputs
             Mouse.Update();
 
@@ -108,10 +111,10 @@ namespace Tetra.Desktop
                     DrawBorder(rectangle, 2, Color.Green, spriteBatch);
                 }
 
-            spriteBatchUi.DrawString(SpriteFont, $"mouse {Mouse.ScreenPosition.X}, {Mouse.ScreenPosition.Y}", new Vector2(50, 50), Color.White);
-            spriteBatchUi.DrawString(SpriteFont, $"world {Mouse.WorldPosition.X}, {Mouse.WorldPosition.Y}", new Vector2(50, 100), Color.White);
-            spriteBatchUi.DrawString(SpriteFont, $"camera {Camera.Position.X}, {Camera.Position.Y}", new Vector2(50, 150), Color.White);
-            spriteBatchUi.DrawString(SpriteFont, $"objects {gameObjects.Count}", new Vector2(50, 200), Color.White);
+            spriteBatchUi.DrawString(SpriteFont, Log, new Vector2(50, 50), Color.White);
+            //spriteBatchUi.DrawString(SpriteFont, $"world {Mouse.WorldPosition.X}, {Mouse.WorldPosition.Y}", new Vector2(50, 100), Color.White);
+            //spriteBatchUi.DrawString(SpriteFont, $"camera {Camera.Position.X}, {Camera.Position.Y}", new Vector2(50, 150), Color.White);
+            //spriteBatchUi.DrawString(SpriteFont, $"objects {gameObjects.Count}", new Vector2(50, 200), Color.White);
 
             spriteBatch.End();
             spriteBatchUi.End();

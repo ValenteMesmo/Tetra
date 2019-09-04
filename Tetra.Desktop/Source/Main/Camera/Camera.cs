@@ -13,7 +13,7 @@ namespace Tetra.Desktop
         public Matrix Transform { get; protected set; }
 
         private CameraKeyboardControls CameraKeyboardControls;
-        private CameraMoveWithMouse CameraMoveWithMouse;
+        private CameraMouseControls CameraMoveWithMouse;
         private float currentMouseWheelValue;
         private float previousMouseWheelValue;
         private float zoom;
@@ -25,7 +25,7 @@ namespace Tetra.Desktop
             Zoom = 1f;
             Position = Vector2.Zero;
             CameraKeyboardControls = new CameraKeyboardControls(this);
-            CameraMoveWithMouse = new CameraMoveWithMouse(this);
+            CameraMoveWithMouse = new CameraMouseControls(this);
         }
 
         private void UpdateVisibleArea()

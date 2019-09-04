@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Tetra.Desktop
 {
-    public class CameraMoveWithMouse
+    public class CameraMouseControls
     {
         private readonly Camera camera;
         private bool wasPressed;
         private Point mouseOrigin;
 
-        public CameraMoveWithMouse(Camera camera)
+        public CameraMouseControls(Camera camera)
         {
             this.camera = camera;
         }
