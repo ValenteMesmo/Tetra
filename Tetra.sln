@@ -5,7 +5,16 @@ VisualStudioVersion = 15.0.28307.779
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetra.Desktop", "Tetra.Desktop\Tetra.Desktop.csproj", "{08BCD881-DD1C-490E-991F-7FF76173D692}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetra", "Tetra\Tetra.csproj", "{CBC9C942-B357-4EA7-A61E-9C8C6E64B871}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Tetra.Shared", "Tetra.Shared\Tetra.Shared.shproj", "{CF3A3484-DA60-4FAF-A10B-43F5C42A54E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetra.Android", "Tetra.Android\Tetra.Android.csproj", "{5C587188-A3BA-49CD-A682-E78B9FD98C33}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Tetra.Shared\Tetra.Shared.projitems*{cf3a3484-da60-4faf-a10b-43f5c42a54e5}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -15,6 +24,16 @@ Global
 		{08BCD881-DD1C-490E-991F-7FF76173D692}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08BCD881-DD1C-490E-991F-7FF76173D692}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08BCD881-DD1C-490E-991F-7FF76173D692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC9C942-B357-4EA7-A61E-9C8C6E64B871}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC9C942-B357-4EA7-A61E-9C8C6E64B871}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC9C942-B357-4EA7-A61E-9C8C6E64B871}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC9C942-B357-4EA7-A61E-9C8C6E64B871}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C587188-A3BA-49CD-A682-E78B9FD98C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C587188-A3BA-49CD-A682-E78B9FD98C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C587188-A3BA-49CD-A682-E78B9FD98C33}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5C587188-A3BA-49CD-A682-E78B9FD98C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C587188-A3BA-49CD-A682-E78B9FD98C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C587188-A3BA-49CD-A682-E78B9FD98C33}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
