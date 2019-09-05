@@ -42,15 +42,15 @@ namespace Tetra
             var attackCooldwon = new CooldownTracker(20);
             var HurtCooldwon = new CooldownTracker(10);
 
-            var changesSpeed = new IncreaseHorizontalVelocity(this, 5);
-            var decreaseVelocity = new DecreaseHorizontalVelocity(this, 5);
-            var limitHorizontalVelocity = new LimitHorizontalVelocity(this, 20);
-            var gravityChangesVerticalSpeed = new GravityChangesVerticalSpeed(this);
+            var changesSpeed = new IncreaseHorizontalVelocity(this, 1);
+            var decreaseVelocity = new DecreaseHorizontalVelocity(this, 2);
+            var limitHorizontalVelocity = new LimitHorizontalVelocity(this, 10);
+            var gravityChangesVerticalSpeed = new GravityChangesVerticalSpeed(this,1, 20);
 
             var ChangePlayerStateToFalling = new ChangePlayerStateToFalling(this);
             var changePlayerToIdle = new ChangePlayerStateToIdle(this, Inputs);
             var changePlayerToWalking = new ChangePlayerStateToWalking(this, Inputs);
-            var ChangePlayerToJumpingState = new ChangePlayerStateToJumping(this, Inputs);
+            var ChangePlayerToJumpingState = new ChangePlayerStateToJumping(this, Inputs, 20);
             //var changePlayerStateToCrouch = new ChangePlayerStateToCrouch(this);
             //var changePlayerStateToLookingUp = new ChangePlayerStateToLookingUp(this);
             //var ChangePlayerStateToAttack = new ChangePlayerStateToAttack(this, attackCooldwon);
