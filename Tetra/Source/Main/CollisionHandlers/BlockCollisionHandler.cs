@@ -9,30 +9,48 @@
 
             if (direction == CollisionDirection.Bot)
             {
-                //TODO: - offsetY
-                Source.Parent.Position.Y = Target.Top() - Source.Height - 1;
+                var newY = Target.Top() - Source.Height - Source.OffsetY - 1;
+                //var diff = newY - Source.Parent.Position.Y;
+                //if (diff > Target.Height || diff < -Target.Height)
+                //    return;
+
+                Source.Parent.Position.Y = newY;
                 Source.Parent.Velocity.Y = 0;
                 return;
             }
 
             if (direction == CollisionDirection.Top)
             {
-                //TODO: - offsetY
-                Source.Parent.Position.Y = Target.Bottom() + Target.Height + 1;
+                var newY = Target.Bottom() - Source.OffsetY + 1;
+                //var diff = newY - Source.Parent.Position.Y;
+                //if (diff > Target.Height || diff < -Target.Height)
+                //    return;
+
+                Source.Parent.Position.Y = newY;
                 Source.Parent.Velocity.Y = 0;
                 return;
             }
 
             if (direction == CollisionDirection.Left)
             {
-                Source.Parent.Position.X = Target.Right() + 1 - Source.OffsetX;
+                var newX = Target.Right() - Source.OffsetX + 1;
+                //var diff = newX - Source.Parent.Position.X;
+                //if (diff > Target.Width || diff < -Target.Width)
+                //    return;
+
+                Source.Parent.Position.X = newX;
                 Source.Parent.Velocity.X = 0;
                 return;
             }
 
             if (direction == CollisionDirection.Right)
             {
-                Source.Parent.Position.X = Target.Left() - Source.OffsetX - Source.Width - 1;
+                var newX = Target.Left() - Source.OffsetX - Source.Width - 1;
+                //var diff = newX - Source.Parent.Position.X;
+                //if (diff > Target.Width || diff < -Target.Width)
+                //    return;
+
+                Source.Parent.Position.X = newX;
                 Source.Parent.Velocity.X = 0;
                 return;
             }

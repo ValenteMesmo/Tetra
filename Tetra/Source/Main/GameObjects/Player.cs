@@ -16,8 +16,10 @@ namespace Tetra
             var flagGrounded = new FlagAsGrounded(this);
             Collider = new Collider(this)
             {
-                Width = GameConstants.BLOCK_SIZE,
-                Height = GameConstants.BLOCK_SIZE * 2,
+                Width = GameConstants.BLOCK_SIZE - 2,
+                Height = (GameConstants.BLOCK_SIZE * 2) - 2,
+                OffsetX = 1,
+                OffsetY = 1,
                 Collision = new CollisionHandlerAggregation(flagGrounded, new BlockCollisionHandler()),
                 BeforeCollisions = flagGrounded
             };
