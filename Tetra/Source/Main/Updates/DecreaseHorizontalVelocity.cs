@@ -17,9 +17,17 @@
         public void Update()
         {
             if (Target.Velocity.X > 0)
+            {
                 Target.Velocity.X -= Speed;
+                if(Target.Velocity.X < 0)
+                    Target.Velocity.X = 0;
+            }
             else if (Target.Velocity.X < 0)
+            {
                 Target.Velocity.X += Speed;
+                if (Target.Velocity.X > 0)
+                    Target.Velocity.X = 0;
+            }
         }
     }
 }

@@ -4,7 +4,7 @@
     {
         private readonly MouseInfo mouse;
         private readonly MouseCursor cursor;
-        private const int size = GameConstants.BLOCK_SIZE;
+        private const int size = GameConstants.BlockSize;
 
         public MoveMouseCursorToNearbyCell(MouseInfo mouse, MouseCursor cursor)
         {

@@ -12,8 +12,8 @@ namespace Tetra
             {
                 OffsetX = 1,
                 OffsetY = 1,
-                Width = GameConstants.BLOCK_SIZE -2,
-                Height = GameConstants.BLOCK_SIZE -2
+                Width = GameConstants.BlockSize -2,
+                Height = GameConstants.BlockSize -2
             };
 
             Animation = new SimpleAnimation(
@@ -22,8 +22,8 @@ namespace Tetra
                     "block", 
                     0, 
                     0, 
-                    GameConstants.BLOCK_SIZE, 
-                    GameConstants.BLOCK_SIZE
+                    GameConstants.BlockSize, 
+                    GameConstants.BlockSize
                 )
             );
         }

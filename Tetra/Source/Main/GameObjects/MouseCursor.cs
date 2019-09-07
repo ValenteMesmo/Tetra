@@ -32,8 +32,8 @@ namespace Tetra
                     "block",
                     0,
                     0,
-                    GameConstants.BLOCK_SIZE,
-                    GameConstants.BLOCK_SIZE));
+                    GameConstants.BlockSize,
+                    GameConstants.BlockSize));
         }
 
         public override IEnumerable<Collider> GetColliders()

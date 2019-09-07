@@ -7,8 +7,8 @@ namespace Tetra
     {
         public static Point GetCellPosition(this MouseInfo mouse) {
             return new Point(
-                (int)(Math.Floor(mouse.WorldPosition.X / GameConstants.BLOCK_SIZE) * GameConstants.BLOCK_SIZE),
-                (int)(Math.Floor(mouse.WorldPosition.Y / GameConstants.BLOCK_SIZE) * GameConstants.BLOCK_SIZE)
+                (int)(Math.Floor(mouse.WorldPosition.X / GameConstants.BlockSize) * GameConstants.BlockSize),
+                (int)(Math.Floor(mouse.WorldPosition.Y / GameConstants.BlockSize) * GameConstants.BlockSize)
             );
         }
     }

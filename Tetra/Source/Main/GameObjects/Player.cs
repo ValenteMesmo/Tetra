@@ -11,13 +11,13 @@ namespace Tetra
 
         public Player()
         {
-            Animation = new SimpleAnimation(new AnimationFrame(this, "player", 0, 0, GameConstants.BLOCK_SIZE, GameConstants.BLOCK_SIZE * 2));
+            Animation = new SimpleAnimation(new AnimationFrame(this, "player", 0, 0, GameConstants.BlockSize, GameConstants.BlockSize * 2));
 
             var flagGrounded = new FlagAsGrounded(this);
             Collider = new Collider(this)
             {
-                Width = GameConstants.BLOCK_SIZE - 2,
-                Height = (GameConstants.BLOCK_SIZE * 2) - 2,
+                Width = GameConstants.BlockSize - 2,
+                Height = (GameConstants.BlockSize * 2) - 2,
                 OffsetX = 1,
                 OffsetY = 1,
                 Collision = new CollisionHandlerAggregation(flagGrounded, new BlockCollisionHandler()),
@@ -41,24 +41,16 @@ namespace Tetra
 
         private UpdateByState CreateUpdatesByState(GameInput Inputs)
         {
-            var attackCooldwon = new CooldownTracker(20);
-            var HurtCooldwon = new CooldownTracker(10);
 
-            var changesSpeed = new IncreaseHorizontalVelocity(this, 1);
-            var decreaseVelocity = new DecreaseHorizontalVelocity(this, 2);
-            var limitHorizontalVelocity = new LimitHorizontalVelocity(this, 10);
-            var gravityChangesVerticalSpeed = new GravityChangesVerticalSpeed(this,1, 20);
+            var changesSpeed = new IncreaseHorizontalVelocity(this, GameConstants.WalkAccel);
+            var decreaseVelocity = new DecreaseHorizontalVelocity(this, GameConstants.Friction);
+            var limitHorizontalVelocity = new LimitHorizontalVelocity(this, GameConstants.WalkMaxSpeed);
+            var gravityChangesVerticalSpeed = new GravityChangesVerticalSpeed(this, GameConstants.GravityAccel, GameConstants.GravityMaxSpeed);
 
             var ChangePlayerStateToFalling = new ChangePlayerStateToFalling(this);
             var changePlayerToIdle = new ChangePlayerStateToIdle(this, Inputs);
             var changePlayerToWalking = new ChangePlayerStateToWalking(this, Inputs);
-            var ChangePlayerToJumpingState = new ChangePlayerStateToJumping(this, Inputs, 20);
-            //var changePlayerStateToCrouch = new ChangePlayerStateToCrouch(this);
-            //var changePlayerStateToLookingUp = new ChangePlayerStateToLookingUp(this);
-            //var ChangePlayerStateToAttack = new ChangePlayerStateToAttack(this, attackCooldwon);
-            //var ChangePlayerStateToAfterAttack = new ChangePlayerStateToAfterAttack(this, attackCooldwon);
-            //var ChangePlayerStateToHurt = new ChangePlayerStateToHurt(this, HurtCooldwon);
-            //var ChangePlayerStateToAfterHurt = new ChangePlayerStateToAfterHurt(this, HurtCooldwon);
+            var ChangePlayerToJumpingState = new ChangePlayerStateToJumping(this, Inputs, GameConstants.JumpForce);
 
             var updateByState = new UpdateByState(this);
 
@@ -68,19 +60,12 @@ namespace Tetra
                 , ChangePlayerStateToFalling
                 , changePlayerToWalking
                 , ChangePlayerToJumpingState
-            //, changePlayerStateToCrouch
-            //, changePlayerStateToLookingUp
-            //, ChangePlayerStateToAttack
-            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.FALLING, new UpdateAggregation(
                 gravityChangesVerticalSpeed
                 , changePlayerToWalking
                 , changePlayerToIdle
-            //, changePlayerStateToCrouch
-            //, changePlayerStateToLookingUp
-            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.WALKING, new UpdateAggregation(
@@ -91,70 +76,12 @@ namespace Tetra
                 , ChangePlayerToJumpingState
                 , ChangePlayerStateToFalling
                 , changePlayerToIdle
-            //, changePlayerStateToCrouch
-            //, changePlayerStateToLookingUp
-            //, ChangePlayerStateToAttack
-            //, ChangePlayerStateToHurt
             ));
 
             updateByState.Add(PlayerState.JUMP, new UpdateAggregation(
                 gravityChangesVerticalSpeed
                 , ChangePlayerStateToFalling
                 , changePlayerToIdle
-            //, ChangePlayerStateToHurt
-            ));
-
-            updateByState.Add(PlayerState.CROUCH, new UpdateAggregation(
-                gravityChangesVerticalSpeed
-                , decreaseVelocity
-                , changePlayerToWalking
-                , changePlayerToIdle
-                , ChangePlayerStateToFalling
-            //, changePlayerStateToLookingUp
-            //, ChangePlayerStateToHurt
-            ));
-
-            updateByState.Add(PlayerState.LOOKING_UP, new UpdateAggregation(
-                gravityChangesVerticalSpeed
-                , decreaseVelocity
-                , changePlayerToWalking
-                , changePlayerToIdle
-                , ChangePlayerStateToFalling
-            //, changePlayerStateToCrouch
-            //, ChangePlayerStateToHurt
-            ));
-
-            updateByState.Add(PlayerState.ATTACK, new UpdateAggregation(
-                gravityChangesVerticalSpeed
-                , decreaseVelocity
-            //, ChangePlayerStateToAfterAttack
-            //, ChangePlayerStateToHurt
-            ));
-
-            updateByState.Add(PlayerState.AFTER_ATTACK, new UpdateAggregation(
-                gravityChangesVerticalSpeed
-                , decreaseVelocity
-                , changePlayerToIdle
-                , changePlayerToWalking
-                , ChangePlayerStateToFalling
-            //, changePlayerStateToCrouch
-            //, ChangePlayerStateToHurt
-            ));
-
-            updateByState.Add(PlayerState.HURT, new UpdateAggregation(
-                gravityChangesVerticalSpeed
-                , decreaseVelocity
-            //, ChangePlayerStateToAfterHurt
-            ));
-
-            updateByState.Add(PlayerState.AFTER_HURT, new UpdateAggregation(
-                gravityChangesVerticalSpeed
-                , decreaseVelocity
-                , changePlayerToIdle
-                , changePlayerToWalking
-                , ChangePlayerStateToFalling
-            //, changePlayerStateToCrouch
-            //, ChangePlayerStateToHurt
             ));
 
             return updateByState;

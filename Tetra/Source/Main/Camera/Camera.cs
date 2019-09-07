@@ -22,7 +22,7 @@ namespace Tetra
         public Camera(Viewport viewport)
         {
             Bounds = viewport.Bounds;
-            Zoom = 1f;
+            Zoom = .075f;
             Position = Vector2.Zero;
             CameraKeyboardControls = new CameraKeyboardControls(this);
             CameraMoveWithMouse = new CameraMouseControls(this);
@@ -64,8 +64,8 @@ namespace Tetra
         {
             Zoom += zoomAmount;
 
-            if (Zoom < .35f)
-                Zoom = .35f;
+            if (Zoom < .075f)
+                Zoom = .075f;
 
             if (Zoom > 2f)
                 Zoom = 2f;
