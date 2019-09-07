@@ -15,7 +15,7 @@ namespace Tetra
             this.World = World;
         }
 
-        public void Update(float elapsed)
+        public void Update()
         {
             quadtree.Clear();
 
@@ -28,7 +28,7 @@ namespace Tetra
             {
                 GameObject.Update.Update();
 
-                GameObject.Position.Y += GameObject.Velocity.Y * elapsed;
+                GameObject.Position.Y += GameObject.Velocity.Y ;
                 var colliders = GameObject.GetColliders();
                 foreach (var collider in colliders)
                 {
@@ -40,7 +40,7 @@ namespace Tetra
                     CheckCollisions(InternalCollisionDirection.Vertical, collider);
                 }
 
-                GameObject.Position.X += GameObject.Velocity.X * elapsed;
+                GameObject.Position.X += GameObject.Velocity.X;
                 foreach (var collider in colliders)
                 {
                     if (collider.IsDumb)

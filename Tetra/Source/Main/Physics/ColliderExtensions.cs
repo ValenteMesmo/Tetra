@@ -35,20 +35,13 @@
             }
         }
 
-        public static float Left(this Collider a) => a.RelativeX();
-
-        public static float Right(this Collider a) => a.RelativeX() + a.Width;
-
-        public static float Top(this Collider a) => a.RelativeY();
-
-        public static float Bottom(this Collider a) => a.RelativeY() + a.Height;
-
-        public static float CenterX(this Collider collider) => (collider.Left() + collider.Right()) * 0.5f;
-
-        public static float CenterY(this Collider collider) => (collider.Top() + collider.Bottom()) * 0.5f;
-
-        public static float RelativeX(this Collider collider) => collider.Parent.Position.X + collider.OffsetX;
-
-        public static float RelativeY(this Collider collider) => collider.Parent.Position.Y + collider.OffsetY;
+        public static int Left(this Collider a) => a.RelativeX();
+        public static int Right(this Collider a) => a.RelativeX() + a.Width;
+        public static int Top(this Collider a) => a.RelativeY();
+        public static int Bottom(this Collider a) => a.RelativeY() + a.Height;
+        public static int CenterX(this Collider collider) => (collider.Left() + collider.Right()) / 2;
+        public static int CenterY(this Collider collider) => (collider.Top() + collider.Bottom()) / 2;
+        public static int RelativeX(this Collider collider) => collider.Parent.Position.X + collider.OffsetX;
+        public static int RelativeY(this Collider collider) => collider.Parent.Position.Y + collider.OffsetY;
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Tetra
 {
@@ -11,6 +12,7 @@ namespace Tetra
         public static Queue<Rectangle> RectanglesToRenderUI = new Queue<Rectangle>();
         public static string Log;
 
+        private FramerateCounter FramerateCounter = new FramerateCounter();
         private Dictionary<string, Texture2D> Texture = new Dictionary<string, Texture2D>();
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -25,6 +27,8 @@ namespace Tetra
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            //IsFixedTimeStep = false;
+            //graphics.SynchronizeWithVerticalRetrace = false;
         }
 
         protected override void Initialize()
@@ -61,13 +65,16 @@ namespace Tetra
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            Log = "";
+            FramerateCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             //update inputs
             Mouse.Update();
 
+            Log = "";
+            Log += $"{FramerateCounter.AverageFramesPerSecond}";
+
             //custom updates
-            GameLoop.Update(1);//??????
+            GameLoop.Update();
 
             //update camera
             Camera.UpdateCamera(GraphicsDevice.Viewport);
@@ -128,6 +135,38 @@ namespace Tetra
             spriteBatch.Draw(Texture["pixel"], new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
             spriteBatch.Draw(Texture["pixel"], new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder), rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
             spriteBatch.Draw(Texture["pixel"], new Rectangle(rectangleToDraw.X, rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder, rectangleToDraw.Width, thicknessOfBorder), null, borderColor, 0, Vector2.Zero, SpriteEffects.None, 0);
+        }
+    }
+
+    public class FramerateCounter
+    {
+        public long TotalFrames { get; private set; }
+        public float TotalSeconds { get; private set; }
+        public float AverageFramesPerSecond { get; private set; }
+        public float CurrentFramesPerSecond { get; private set; }
+
+        public const int MAXIMUM_SAMPLES = 10;
+
+        private Queue<float> _sampleBuffer = new Queue<float>();
+
+        internal void Update(float deltaTime)
+        {
+            CurrentFramesPerSecond = 1.0f / deltaTime;
+
+            _sampleBuffer.Enqueue(CurrentFramesPerSecond);
+
+            if (_sampleBuffer.Count > MAXIMUM_SAMPLES)
+            {
+                _sampleBuffer.Dequeue();
+                AverageFramesPerSecond = _sampleBuffer.Average(i => i);
+            }
+            else
+            {
+                AverageFramesPerSecond = CurrentFramesPerSecond;
+            }
+
+            TotalFrames++;
+            TotalSeconds += deltaTime;
         }
     }
 }

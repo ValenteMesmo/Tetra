@@ -5,10 +5,10 @@ namespace Tetra
 {
     public class Collider
     {
-        public float OffsetX;
-        public float OffsetY;
-        public float Width;
-        public float Height;
+        public int OffsetX;
+        public int OffsetY;
+        public int Width;
+        public int Height;
         public bool Disabled;
         public readonly GameObject Parent;
 
@@ -25,7 +25,7 @@ namespace Tetra
         }
 
         public Rectangle AsRectangle() =>
-            new Rectangle((int)this.RelativeX(), (int)this.RelativeY(), (int)Width, (int)Height);
+            new Rectangle(this.RelativeX(), this.RelativeY(), Width, Height);
 
         public override string ToString() => $"({Parent.Position.X + OffsetX}, {Parent.Position.Y + OffsetY}) {Parent.GetType().Name}";
     }
