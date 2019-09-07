@@ -10,8 +10,10 @@ namespace Tetra
         {
             Collider = new Collider(this)
             {
-                Width = GameConstants.BLOCK_SIZE,
-                Height = GameConstants.BLOCK_SIZE
+                OffsetX = 1,
+                OffsetY = 1,
+                Width = GameConstants.BLOCK_SIZE -2,
+                Height = GameConstants.BLOCK_SIZE -2
             };
 
             Animation = new SimpleAnimation(
