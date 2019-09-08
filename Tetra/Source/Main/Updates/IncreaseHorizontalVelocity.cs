@@ -4,18 +4,20 @@
     {
         public readonly int Speed;
         public readonly GameObject Target;
+        private readonly GameInput Input;
 
-        public IncreaseHorizontalVelocity(GameObject Target, int Speed)
+        public IncreaseHorizontalVelocity(GameObject Target, int Speed, GameInput Input)
         {
             this.Speed = Speed;
             this.Target = Target;
+            this.Input = Input;
         }
 
         public void Update()
         {
-            if (Target.FacingRight)
+            if (Input.Right)
                 Target.Velocity.X += Speed;
-            else
+            else if (Input.Left)
                 Target.Velocity.X -= Speed;
         }
     }

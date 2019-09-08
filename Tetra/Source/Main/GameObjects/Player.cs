@@ -23,7 +23,7 @@ namespace Tetra
                 Collision = new CollisionHandlerAggregation(flagGrounded, new BlockCollisionHandler()),
                 BeforeCollisions = flagGrounded
             };
-            
+
             var input = new GameInput();
 
             Update = new UpdateAggregation(
@@ -39,47 +39,52 @@ namespace Tetra
             yield return Collider;
         }
 
-        private UpdateByState CreateUpdatesByState(GameInput Inputs)
+        private UpdateByState CreateUpdatesByState(GameInput Input)
         {
 
-            var changesSpeed = new IncreaseHorizontalVelocity(this, GameConstants.WalkAccel);
-            var decreaseVelocity = new DecreaseHorizontalVelocity(this, GameConstants.Friction);
+            var groundSpeed = new IncreaseHorizontalVelocity(this, GameConstants.WalkAccel, Input);
+            var airSpeed = new IncreaseHorizontalVelocity(this, GameConstants.WalkAccel / 2, Input);
+            var groundFriction = new DecreaseHorizontalVelocity(this, GameConstants.Friction);
             var limitHorizontalVelocity = new LimitHorizontalVelocity(this, GameConstants.WalkMaxSpeed);
             var gravityChangesVerticalSpeed = new GravityChangesVerticalSpeed(this, GameConstants.GravityAccel, GameConstants.GravityMaxSpeed);
 
             var ChangePlayerStateToFalling = new ChangePlayerStateToFalling(this);
-            var changePlayerToIdle = new ChangePlayerStateToIdle(this, Inputs);
-            var changePlayerToWalking = new ChangePlayerStateToWalking(this, Inputs);
-            var ChangePlayerToJumpingState = new ChangePlayerStateToJumping(this, Inputs, GameConstants.JumpForce);
+            var changePlayerToIdle = new ChangePlayerStateToIdle(this, Input);
+            var changePlayerToWalking = new ChangePlayerStateToWalking(this, Input);
+            var ChangePlayerToJumpingState = new ChangeToJumpState(this, Input, GameConstants.JumpForce);
 
             var updateByState = new UpdateByState(this);
 
-            updateByState.Add(PlayerState.IDLE, new UpdateAggregation(
+            updateByState.Add(PlayerState.Idle, new UpdateAggregation(
                 gravityChangesVerticalSpeed
-                , decreaseVelocity
+                , groundFriction
                 , ChangePlayerStateToFalling
                 , changePlayerToWalking
                 , ChangePlayerToJumpingState
             ));
 
-            updateByState.Add(PlayerState.FALLING, new UpdateAggregation(
+            updateByState.Add(PlayerState.Jump, new UpdateAggregation(
                 gravityChangesVerticalSpeed
-                , changePlayerToWalking
-                , changePlayerToIdle
-            ));
-
-            updateByState.Add(PlayerState.WALKING, new UpdateAggregation(
-                gravityChangesVerticalSpeed
+                , airSpeed
                 , limitHorizontalVelocity
-                , changesSpeed
-                , changePlayerToWalking
-                , ChangePlayerToJumpingState
                 , ChangePlayerStateToFalling
                 , changePlayerToIdle
             ));
 
-            updateByState.Add(PlayerState.JUMP, new UpdateAggregation(
+            updateByState.Add(PlayerState.Fall, new UpdateAggregation(
                 gravityChangesVerticalSpeed
+                , airSpeed
+                , limitHorizontalVelocity
+                , changePlayerToWalking
+                , changePlayerToIdle
+            ));
+
+            updateByState.Add(PlayerState.Walk, new UpdateAggregation(
+                gravityChangesVerticalSpeed
+                , groundSpeed
+                , limitHorizontalVelocity
+                , changePlayerToWalking
+                , ChangePlayerToJumpingState
                 , ChangePlayerStateToFalling
                 , changePlayerToIdle
             ));

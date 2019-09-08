@@ -1,12 +1,12 @@
 ﻿namespace Tetra
 {
-    public class ChangePlayerStateToJumping : IHandleUpdates
+    public class ChangeToJumpState : IHandleUpdates
     {
         public readonly Player Player;
         private readonly GameInput input;
         private readonly int jumpForce;
 
-        public ChangePlayerStateToJumping(Player Player, GameInput input, int jumpForce)
+        public ChangeToJumpState(Player Player, GameInput input, int jumpForce)
         {
             this.Player = Player;
             this.input = input;
@@ -18,7 +18,7 @@
             if (Player.Grounded && input.Action == InputAction.Jump)
             {
                 Player.Velocity.Y = -jumpForce;
-                Player.State = PlayerState.JUMP;
+                Player.State = PlayerState.Jump;
             }
         }
     }

@@ -14,7 +14,7 @@
         public void Update()
         {
             if (Player.Grounded && input.Direction == InputDirection.None)
-                Player.State = PlayerState.IDLE;
+                Player.State = PlayerState.Idle;
         }
     }
 }

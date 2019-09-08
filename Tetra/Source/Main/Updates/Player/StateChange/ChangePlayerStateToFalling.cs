@@ -12,7 +12,7 @@
         public void Update()
         {
             if (!Player.Grounded && Player.Velocity.Y > 0)
-                Player.State = PlayerState.FALLING;
+                Player.State = PlayerState.Fall;
         }
     }
 }

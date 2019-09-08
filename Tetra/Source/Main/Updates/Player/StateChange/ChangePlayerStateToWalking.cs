@@ -15,16 +15,8 @@
         {
             if (Player.Grounded)
             {
-                if (input.Direction == InputDirection.Left)
-                {
-                    Player.State = PlayerState.WALKING;
-                    Player.FacingRight = false;
-                }
-                else if (input.Direction == InputDirection.Right)
-                {
-                    Player.State = PlayerState.WALKING;
-                    Player.FacingRight = true;
-                }
+                if (input.Direction == InputDirection.Left || input.Direction == InputDirection.Right)
+                    Player.State = PlayerState.Walk;
             }
         }
     }
