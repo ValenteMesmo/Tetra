@@ -11,11 +11,19 @@ namespace Tetra
 
         public bool RenderColliders { get => GameWorld.RenderColliders; set => GameWorld.RenderColliders = value; }
 
-        public EditorWorld(MouseInfo mouseInfo)
+        public EditorWorld(MouseInfo mouseInfo, Camera Camera)
         {
             EditorObjects.Add(new EditorObject(() => new Player()));
             EditorObjects.Add(new GameObject { Update = new ChangeToGameMode(this, new CooldownTracker(30)) });
-            EditorObjects.Add(new GameObject { Update = new CollisionDebugToggler(this, new CooldownTracker(30)) });            
+            EditorObjects.Add(new GameObject
+            {
+                Update = new UpdateAggregation(
+                    new MouseScrollControlsCameraZoom(Camera)
+                    , new CameraMouseControls(Camera)
+                    , new CameraKeyboardControls(Camera)
+                )
+            });
+            EditorObjects.Add(new GameObject { Update = new CollisionDebugToggler(this, new CooldownTracker(30)) });
             EditorObjects.Add(new MouseCursor(this, mouseInfo));
         }
 

@@ -55,8 +55,9 @@
     <Compile Include="Source\Main\Animations\IHandleAnimations.cs" />
     <Compile Include="Source\Main\Animations\SimpleAnimation.cs" />
     <Compile Include="Source\Main\Camera\Camera.cs" />
-    <Compile Include="Source\Main\Camera\CameraKeyboardControls.cs" />
-    <Compile Include="Source\Main\Camera\CameraMouseControls.cs" />
+    <Compile Include="Source\Main\Camera\Updates\CameraKeyboardControls.cs" />
+    <Compile Include="Source\Main\Camera\Updates\CameraMouseControls.cs" />
+    <Compile Include="Source\Main\Camera\Updates\MouseScrollControlsCameraZoom.cs" />
     <Compile Include="Source\Main\CollisionHandlers\BlockCollisionHandler.cs" />
     <Compile Include="Source\Main\CollisionHandlers\CollisionHandlerAggregation.cs" />
     <Compile Include="Source\Main\CollisionHandlers\FlagAsGrounded.cs" />

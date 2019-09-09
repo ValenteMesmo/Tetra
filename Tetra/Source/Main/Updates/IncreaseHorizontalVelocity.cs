@@ -17,6 +17,7 @@
         {
             if (Input.Right)
                 Target.Velocity.X += Speed;
+
             else if (Input.Left)
                 Target.Velocity.X -= Speed;
         }

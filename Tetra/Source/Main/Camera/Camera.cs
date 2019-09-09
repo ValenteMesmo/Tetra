@@ -1,29 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Tetra
 {
     public class Camera
     {
-        public float Zoom { get; set; }
-        public Vector2 Position { get; set; }
-        public Rectangle Bounds { get; protected set; }
-        public Rectangle VisibleArea { get; protected set; }
-        public Matrix Transform { get; protected set; }
+        public float Zoom { get; private set; }
+        public Point Position { get; set; }
+        public Rectangle Bounds { get; private set; }
+        public Rectangle VisibleArea { get; private set; }
+        public Matrix Transform { get; private set; }
 
         private CameraKeyboardControls CameraKeyboardControls;
         private CameraMouseControls CameraMoveWithMouse;
-        private float currentMouseWheelValue;
-        private float previousMouseWheelValue;
-        private float zoom;
-        private float previousZoom;
-
+        
         public Camera(Viewport viewport)
         {
             Bounds = viewport.Bounds;
             Zoom = .075f;
-            Position = Vector2.Zero;
+            Position = Point.Zero;
             CameraKeyboardControls = new CameraKeyboardControls(this);
             CameraMoveWithMouse = new CameraMouseControls(this);
         }
@@ -40,37 +35,34 @@ namespace Tetra
             var min = new Vector2(
                 MathHelper.Min(tl.X, MathHelper.Min(tr.X, MathHelper.Min(bl.X, br.X))),
                 MathHelper.Min(tl.Y, MathHelper.Min(tr.Y, MathHelper.Min(bl.Y, br.Y))));
+
             var max = new Vector2(
                 MathHelper.Max(tl.X, MathHelper.Max(tr.X, MathHelper.Max(bl.X, br.X))),
                 MathHelper.Max(tl.Y, MathHelper.Max(tr.Y, MathHelper.Max(bl.Y, br.Y))));
+
             VisibleArea = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
         }
 
         private void UpdateMatrix()
         {
-            Transform = Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0)) *
-                    Matrix.CreateScale(Zoom) *
-                    Matrix.CreateTranslation(new Vector3(Bounds.Width * 0.5f, Bounds.Height * 0.5f, 0));
+            Transform =
+                Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0))
+                * Matrix.CreateScale(Zoom)
+                * Matrix.CreateTranslation(new Vector3(Bounds.Width * 0.5f, Bounds.Height * 0.5f, 0));
 
             UpdateVisibleArea();
-        }
-
-        public void MoveCamera(Vector2 movePosition)
-        {
-            Position = Position + movePosition;
         }
 
         public void AdjustZoom(float zoomAmount)
         {
             Zoom += zoomAmount;
 
-            if (Zoom < .075f)
-                Zoom = .075f;
+            if (Zoom < .01f)
+                Zoom = .01f;
 
-            if (Zoom > 2f)
-                Zoom = 2f;
+            if (Zoom > .5f)
+                Zoom = .5f;
         }
-
 
         public Vector2 ToWorld(Vector2 position) =>
             Vector2.Transform(position, Matrix.Invert(Transform));
@@ -78,27 +70,10 @@ namespace Tetra
         public Vector2 ToScreen(Vector2 position) =>
             Vector2.Transform(position, Transform);
 
-
         public void UpdateCamera(Viewport bounds)
         {
             Bounds = bounds.Bounds;
             UpdateMatrix();
-
-            CameraKeyboardControls.Update();
-            CameraMoveWithMouse.Update();
-
-            var mouse = Mouse.GetState();
-            previousMouseWheelValue = currentMouseWheelValue;
-            currentMouseWheelValue = mouse.ScrollWheelValue;
-
-            if (currentMouseWheelValue > previousMouseWheelValue)
-                AdjustZoom(.05f);
-
-            if (currentMouseWheelValue < previousMouseWheelValue)
-                AdjustZoom(-.05f);
-
-            previousZoom = zoom;
-            zoom = Zoom;
         }
     }
 }

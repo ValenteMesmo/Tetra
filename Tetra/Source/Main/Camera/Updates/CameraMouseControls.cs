@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Tetra
 {
-    public class CameraMouseControls
+    public class CameraMouseControls : IHandleUpdates
     {
         private readonly Camera camera;
         private bool wasPressed;
@@ -30,7 +30,7 @@ namespace Tetra
                 var speedX = NewMethod(mouse.Position.X, mouseOrigin.X);
                 var speedY = NewMethod(mouse.Position.Y, mouseOrigin.Y);
 
-                camera.Position = new Vector2(camera.Position.X + speedX, camera.Position.Y + speedY);
+                camera.Position = new Point(camera.Position.X + speedX, camera.Position.Y + speedY);
             }
             else
                 wasPressed = false;

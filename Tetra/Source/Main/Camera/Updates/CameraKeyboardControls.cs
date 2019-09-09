@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Tetra
 {
-    public class CameraKeyboardControls
+    public class CameraKeyboardControls : IHandleUpdates
     {
         private Camera camera;
         private float Zoom => camera.Zoom;
@@ -15,7 +15,7 @@ namespace Tetra
 
         public void Update()
         {
-            Vector2 cameraMovement = Vector2.Zero;
+            Point cameraMovement = Point.Zero;
             int moveSpeed;
 
             if (Zoom > .8f)
@@ -41,7 +41,7 @@ namespace Tetra
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
                 cameraMovement.X = moveSpeed;
 
-            camera.MoveCamera(cameraMovement);
+            camera.Position = camera.Position + cameraMovement;
         }
     }
 }

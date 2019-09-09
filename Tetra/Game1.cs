@@ -52,7 +52,7 @@ namespace Tetra
 
             Mouse = new MouseInfo(Camera);
 
-            GameLoop = new GameLoop(new EditorWorld(Mouse));
+            GameLoop = new GameLoop(new EditorWorld(Mouse, Camera));
         }
 
         protected override void UnloadContent()
