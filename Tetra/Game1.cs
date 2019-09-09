@@ -19,7 +19,7 @@ namespace Tetra
         private SpriteBatch spriteBatchUi;
         private SpriteFont SpriteFont;
         private Camera Camera;
-        private MouseInfo Mouse;
+        private MouseInput Mouse;
         private GameLoop GameLoop;
 
         public Game1()
@@ -50,7 +50,7 @@ namespace Tetra
 
             SpriteFont = Content.Load<SpriteFont>("SpriteFont");
 
-            Mouse = new MouseInfo(Camera);
+            Mouse = new MouseInput(Camera);
 
             GameLoop = new GameLoop(new EditorWorld(Mouse, Camera));
         }

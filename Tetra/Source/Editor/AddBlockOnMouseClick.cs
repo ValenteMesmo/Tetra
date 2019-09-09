@@ -4,11 +4,11 @@ namespace Tetra
 {
     public class AddBlockOnMouseClick : IHandleUpdates
     {
-        private readonly MouseInfo mouse;
+        private readonly MouseInput mouse;
         private readonly CollisionsKeeper parentCollisions;
         private readonly World World;
 
-        public AddBlockOnMouseClick(MouseInfo mouse, CollisionsKeeper parentCollisions, World World)
+        public AddBlockOnMouseClick(MouseInput mouse, CollisionsKeeper parentCollisions, World World)
         {
             this.mouse = mouse;
             this.parentCollisions = parentCollisions;

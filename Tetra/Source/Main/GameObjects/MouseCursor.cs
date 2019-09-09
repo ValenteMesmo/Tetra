@@ -7,7 +7,7 @@ namespace Tetra
     {
         private readonly Collider Collider;
 
-        public MouseCursor(World world, MouseInfo mouse)
+        public MouseCursor(World world, MouseInput mouse)
         {
             var collisionKeeper = new CollisionsKeeper();
 

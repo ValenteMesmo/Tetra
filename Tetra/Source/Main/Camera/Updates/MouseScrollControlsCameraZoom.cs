@@ -5,18 +5,18 @@ namespace Tetra
     public class MouseScrollControlsCameraZoom : IHandleUpdates
     {
         private readonly Camera Camera;
-
+        private readonly MouseInput mouse;
         private float currentMouseWheelValue;
         private float previousMouseWheelValue;
 
-        public MouseScrollControlsCameraZoom(Camera Camera)
+        public MouseScrollControlsCameraZoom(Camera Camera, MouseInput mouse)
         {
             this.Camera = Camera;
+            this.mouse = mouse;
         }
 
         public void Update()
-        {
-            var mouse = Mouse.GetState();
+        {            
             previousMouseWheelValue = currentMouseWheelValue;
             currentMouseWheelValue = mouse.ScrollWheelValue;
 

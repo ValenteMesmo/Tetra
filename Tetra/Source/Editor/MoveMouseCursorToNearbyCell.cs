@@ -2,11 +2,11 @@
 {
     public class MoveMouseCursorToNearbyCell : IHandleUpdates
     {
-        private readonly MouseInfo mouse;
+        private readonly MouseInput mouse;
         private readonly MouseCursor cursor;
         private const int size = GameConstants.BlockSize;
 
-        public MoveMouseCursorToNearbyCell(MouseInfo mouse, MouseCursor cursor)
+        public MoveMouseCursorToNearbyCell(MouseInput mouse, MouseCursor cursor)
         {
             this.mouse = mouse;
             this.cursor = cursor;

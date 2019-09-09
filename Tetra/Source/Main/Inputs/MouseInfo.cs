@@ -3,19 +3,25 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Tetra
 {
-    public class MouseInfo
+    public class MouseInput
     {
         private readonly Camera Camera;
 
-        public Vector2 ScreenPosition { get; private set; }
-        public Vector2 WorldPosition { get; private set; }
+        public Point ScreenPosition { get; private set; }
+        public Point WorldPosition { get; private set; }
+
         public bool LeftButtonPressed { get; private set; }
         public bool LeftButtonReleased => !LeftButtonPressed;
+
         public bool RightButtonPressed { get; private set; }
         public bool RightButtonReleased => !RightButtonPressed;
-        
 
-        public MouseInfo(Camera Camera)
+        public bool MiddleButtonPressed { get; private set; }
+        public bool MiddleButtonReleased => !MiddleButtonPressed;
+
+        public int ScrollWheelValue { get; private set; }
+
+        public MouseInput(Camera Camera)
         {
             this.Camera = Camera;
         }
@@ -24,11 +30,14 @@ namespace Tetra
         {
             var mouse = Mouse.GetState();
 
-            WorldPosition = Camera.ToWorld(mouse.Position.ToVector2());
-            ScreenPosition = mouse.Position.ToVector2();
+            WorldPosition = Camera.ToWorld(mouse.Position);
+            ScreenPosition = mouse.Position;
 
             LeftButtonPressed = mouse.LeftButton == ButtonState.Pressed;
             RightButtonPressed = mouse.RightButton == ButtonState.Pressed;
+            MiddleButtonPressed = mouse.MiddleButton == ButtonState.Pressed;
+
+            ScrollWheelValue = mouse.ScrollWheelValue;
         }
     }
 }

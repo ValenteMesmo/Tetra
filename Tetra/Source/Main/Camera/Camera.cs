@@ -11,16 +11,11 @@ namespace Tetra
         public Rectangle VisibleArea { get; private set; }
         public Matrix Transform { get; private set; }
 
-        private CameraKeyboardControls CameraKeyboardControls;
-        private CameraMouseControls CameraMoveWithMouse;
-        
         public Camera(Viewport viewport)
         {
             Bounds = viewport.Bounds;
             Zoom = .075f;
-            Position = Point.Zero;
-            CameraKeyboardControls = new CameraKeyboardControls(this);
-            CameraMoveWithMouse = new CameraMouseControls(this);
+            Position = Point.Zero;            
         }
 
         private void UpdateVisibleArea()
@@ -64,11 +59,11 @@ namespace Tetra
                 Zoom = .5f;
         }
 
-        public Vector2 ToWorld(Vector2 position) =>
-            Vector2.Transform(position, Matrix.Invert(Transform));
+        public Point ToWorld(Point position) =>
+            Vector2.Transform(position.ToVector2(), Matrix.Invert(Transform)).ToPoint();
 
-        public Vector2 ToScreen(Vector2 position) =>
-            Vector2.Transform(position, Transform);
+        public Point ToScreen(Point position) =>
+            Vector2.Transform(position.ToVector2(), Transform).ToPoint();
 
         public void UpdateCamera(Viewport bounds)
         {
