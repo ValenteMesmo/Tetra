@@ -22,7 +22,7 @@ namespace Tetra
             };
 
             Update = new UpdateAggregation(
-                new AddBlockOnMouseClick(mouse, collisionKeeper, world),
+                new AddBlockOnMouseClick(this, mouse, collisionKeeper, world),
                 new MoveMouseCursorToNearbyCell(mouse, this)
             );
 
