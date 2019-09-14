@@ -87,21 +87,21 @@ namespace Tetra
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatchUi.Begin();
             spriteBatch.Begin(
-                   SpriteSortMode.BackToFront,
-                   BlendState.AlphaBlend,
-                   null,
-                   null,
-                   null,
-                   null,
-                   Camera.Transform
-               );
+                SpriteSortMode.Deferred,
+                BlendState.AlphaBlend,
+                null,
+                null,
+                null,
+                null,
+                Camera.Transform
+            );
             var gameObjects = GameLoop.GetGameObjects();
             foreach (var obj in gameObjects)
                 foreach (var frame in obj.Animation.GetFrame())
                     spriteBatch.Draw(
                         Texture[frame.Texture],
                         new Rectangle((int)obj.Position.X + (int)frame.OffsetX, (int)obj.Position.Y + (int)frame.OffsetY, (int)frame.Width, (int)frame.Height),
-                        Color.White
+                        frame.Color
                     );
 
             if (GameLoop.World.RenderColliders)

@@ -1,8 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Tetra
 {
+
+    public class EditorGridRenderrer : IHandleAnimations
+    {
+        public bool RenderOnUiLayer => false;
+        private readonly List<AnimationFrame> Frames = new List<AnimationFrame>();
+
+
+
+        public EditorGridRenderrer(GameObject parent)
+        {
+            var offset = GameConstants.BlockSize / 10;
+            var size = GameConstants.BlockSize - offset - offset;
+            for (int i = -15; i < 15; i++)
+            {
+                for (int j = -15; j < 15; j++)
+                {
+                    Frames.Add(
+                        new AnimationFrame(
+                            parent
+                            , "pixel"
+                            , (i * GameConstants.BlockSize) + offset
+                            , (j * GameConstants.BlockSize) + offset
+                            , size
+                            , size
+                        )
+                        { Color = new Color(10, 10, 10, 10) }
+                    );
+                }
+            }
+        }
+
+        public IEnumerable<AnimationFrame> GetFrame()
+        {
+            return Frames;
+        }
+
+        public void Update()
+        {
+        }
+    }
+
     public class EditorWorld : World
     {
         public List<GameObject> EditorObjects = new List<GameObject>();
@@ -13,6 +55,10 @@ namespace Tetra
 
         public EditorWorld(MouseInput mouseInput, Camera Camera)
         {
+            var obj = new GameObject();
+            obj.Animation = new EditorGridRenderrer(obj);
+            EditorObjects.Add(obj);
+
             EditorObjects.Add(new EditorObject(() => new Player()));
             EditorObjects.Add(new GameObject { Update = new ChangeToGameMode(this, new CooldownTracker(30)) });
             EditorObjects.Add(new GameObject

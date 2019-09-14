@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Tetra
 {
@@ -6,6 +7,7 @@ namespace Tetra
     {
         IEnumerable<AnimationFrame> GetFrame();
         void Update();
+        [Obsolete("Remove?")]
         bool RenderOnUiLayer { get; }
     }
 }

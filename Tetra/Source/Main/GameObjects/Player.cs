@@ -11,7 +11,7 @@ namespace Tetra
 
         public Player()
         {
-            Animation = new SimpleAnimation(new AnimationFrame(this, "player", 0, 0, GameConstants.BlockSize, GameConstants.BlockSize * 2));
+            Animation = new SimpleAnimation(new AnimationFrame(this, "block", 0, 0, GameConstants.BlockSize, GameConstants.BlockSize * 2));
 
             var flagGrounded = new FlagAsGrounded(this);
             Collider = new Collider(this)

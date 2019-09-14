@@ -10,7 +10,7 @@ namespace Tetra
         public readonly float OffsetY;
         public readonly int Width;
         public readonly int Height;
-        public readonly Color Color = Color.White;
+        public  Color Color = Color.White;
 
         public AnimationFrame(
             GameObject Parent,
