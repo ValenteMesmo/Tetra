@@ -6,17 +6,26 @@ namespace Tetra
     public class EditorObject : GameObject
     {
         private readonly Func<GameObject> Factory;
-        private readonly IEnumerable<Collider> Colliders;
+        private readonly Collider Collider;
 
         public EditorObject(Func<GameObject> Factory)
         {
             this.Factory = Factory;
             var temp = Factory();
             Animation = temp.Animation;
-            Colliders = temp.GetColliders();
+            Collider = new Collider(this)
+            {
+                OffsetX = 1,
+                OffsetY = 1,
+                Width = GameConstants.BlockSize - 2,
+                Height = GameConstants.BlockSize - 2
+            };
         }
 
-        public override IEnumerable<Collider> GetColliders() => Colliders;
+        public override IEnumerable<Collider> GetColliders()
+        {
+            yield return Collider;
+        }
 
         public GameObject Create()
         {

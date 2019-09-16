@@ -101,6 +101,14 @@ namespace Tetra
                 EditorObjects.Add(Object);
         }
 
+        public void RemoveObject(GameObject Object)
+        {
+            if (playing)
+                GameWorld.RemoveObject(Object);
+            else
+                EditorObjects.Remove(Object);
+        }
+
         public IReadOnlyList<GameObject> GetObjects()
         {
             if (playing)

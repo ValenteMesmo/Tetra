@@ -12,6 +12,11 @@ namespace Tetra
             GameObjects.Add(Object);
         }
 
+        public void RemoveObject(GameObject Object)
+        {
+            GameObjects.Remove(Object);
+        }
+
         public void AddRange(IEnumerable<GameObject> Objects)
         {
             GameObjects.AddRange(Objects);

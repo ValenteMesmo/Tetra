@@ -27,4 +27,28 @@ namespace Tetra
             }
         }
     }
+
+    public class RemoveBlockOnMouseClick : IHandleUpdates
+    {
+        private readonly MouseInput mouse;
+        private readonly MouseCursor cursor;
+        private readonly CollisionsKeeper parentCollisions;
+        private readonly World World;
+
+        public RemoveBlockOnMouseClick(MouseCursor cursor, MouseInput mouse, CollisionsKeeper parentCollisions, World World)
+        {
+            this.mouse = mouse;
+            this.cursor = cursor;
+            this.parentCollisions = parentCollisions;
+            this.World = World;
+        }
+
+        public void Update()
+        {
+            if (mouse.RightButtonPressed && parentCollisions.Collisions.Any())
+            {
+                World.RemoveObject(parentCollisions.Collisions.First().Parent);
+            }
+        }
+    }
 }
