@@ -9,16 +9,30 @@ namespace Tetra
     {
         public bool RenderOnUiLayer => false;
         private readonly List<AnimationFrame> Frames = new List<AnimationFrame>();
+        private readonly Camera camera;
+        private readonly GameObject parent;
 
-
-
-        public EditorGridRenderrer(GameObject parent)
+        public EditorGridRenderrer(GameObject parent, Camera camera)
         {
+            this.camera = camera;
+            this.parent = parent;
+        }
+
+        public IEnumerable<AnimationFrame> GetFrame()
+        {
+            return Frames;
+        }
+
+        public void Update()
+        {
+            Frames.Clear();
+
             var offset = GameConstants.BlockSize / 10;
             var size = GameConstants.BlockSize - offset - offset;
-            for (int i = -15; i < 15; i++)
+
+            for (int i = (camera.VisibleArea.Left/ GameConstants.BlockSize)-1; i < (camera.VisibleArea.Right/ GameConstants.BlockSize)+1; i++)
             {
-                for (int j = -15; j < 15; j++)
+                for (int j = (camera.VisibleArea.Top/ GameConstants.BlockSize)-1; j < (camera.VisibleArea.Bottom/ GameConstants.BlockSize)+1; j++)
                 {
                     Frames.Add(
                         new AnimationFrame(
@@ -34,15 +48,6 @@ namespace Tetra
                 }
             }
         }
-
-        public IEnumerable<AnimationFrame> GetFrame()
-        {
-            return Frames;
-        }
-
-        public void Update()
-        {
-        }
     }
 
     public class EditorWorld : World
@@ -56,7 +61,7 @@ namespace Tetra
         public EditorWorld(MouseInput mouseInput, Camera Camera)
         {
             var obj = new GameObject();
-            obj.Animation = new EditorGridRenderrer(obj);
+            obj.Animation = new EditorGridRenderrer(obj, Camera);
             EditorObjects.Add(obj);
 
             EditorObjects.Add(new EditorObject(() => new Player()));
