@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Tetra
@@ -10,11 +11,11 @@ namespace Tetra
         public Rectangle Bounds { get; private set; }
         public Rectangle VisibleArea { get; private set; }
         public Matrix Transform { get; private set; }
-
+        const float defaultZoom = .050f;
         public Camera(Viewport viewport)
         {
             Bounds = viewport.Bounds;
-            Zoom = .075f;
+            Zoom = defaultZoom;
             Position = Point.Zero;            
         }
 
@@ -38,6 +39,11 @@ namespace Tetra
             VisibleArea = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
         }
 
+        internal void ResetZoom()
+        {
+            Zoom = defaultZoom;
+        }
+
         private void UpdateMatrix()
         {
             Transform =
@@ -52,6 +58,18 @@ namespace Tetra
         {
             Zoom += zoomAmount;
 
+            LimitZoom();
+        }
+
+        public void SetZoom(float value)
+        {
+            Zoom = value;
+
+            LimitZoom();
+        }
+
+        private void LimitZoom()
+        {
             if (Zoom < .01f)
                 Zoom = .01f;
 

@@ -3,14 +3,33 @@ using System.Collections.Generic;
 
 namespace Tetra
 {
+    public class CameraFollowsObjectAround : IHandleUpdates
+    {
+        private readonly Camera camera;
+        private readonly GameObject obj;
+
+        public CameraFollowsObjectAround(GameObject obj, Camera camera)
+        {
+            this.camera = camera;
+            this.obj = obj;
+        }
+
+        public void Update()
+        {
+            camera.Position = obj.Position;
+        }
+    }
+
     public class Player : GameObject, IHaveState
     {
         private readonly Collider Collider;
         [Obsolete]
         internal bool Grounded;
 
-        public Player()
+        public Player(Camera Camera)
         {
+            Camera.ResetZoom();
+
             Animation = new SimpleAnimation(new AnimationFrame(this, "block", 0, 0, GameConstants.BlockSize, GameConstants.BlockSize * 2));
 
             var flagGrounded = new FlagAsGrounded(this);
@@ -29,6 +48,7 @@ namespace Tetra
             Update = new UpdateAggregation(
                 new UpdateInput(input)
                 , CreateUpdatesByState(input)
+                , new CameraFollowsObjectAround(this, Camera)
             );
         }
 

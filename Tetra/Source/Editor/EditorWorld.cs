@@ -64,7 +64,7 @@ namespace Tetra
             obj.Animation = new EditorGridRenderrer(obj, Camera);
             EditorObjects.Add(obj);
 
-            EditorObjects.Add(new EditorObject(() => new Player()));
+            EditorObjects.Add(new EditorObject(() => new Player(Camera)));
             EditorObjects.Add(new GameObject { Update = new ChangeToGameMode(this, new CooldownTracker(30)) });
             EditorObjects.Add(new GameObject
             {
