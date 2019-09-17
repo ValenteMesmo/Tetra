@@ -30,9 +30,9 @@ namespace Tetra
             var offset = GameConstants.BlockSize / 10;
             var size = GameConstants.BlockSize - offset - offset;
 
-            for (int i = (camera.VisibleArea.Left/ GameConstants.BlockSize)-1; i < (camera.VisibleArea.Right/ GameConstants.BlockSize)+1; i++)
+            for (int i = (camera.VisibleArea.Left / GameConstants.BlockSize) - 1; i < (camera.VisibleArea.Right / GameConstants.BlockSize) + 1; i++)
             {
-                for (int j = (camera.VisibleArea.Top/ GameConstants.BlockSize)-1; j < (camera.VisibleArea.Bottom/ GameConstants.BlockSize)+1; j++)
+                for (int j = (camera.VisibleArea.Top / GameConstants.BlockSize) - 1; j < (camera.VisibleArea.Bottom / GameConstants.BlockSize) + 1; j++)
                 {
                     Frames.Add(
                         new AnimationFrame(
@@ -64,7 +64,7 @@ namespace Tetra
             obj.Animation = new EditorGridRenderrer(obj, Camera);
             EditorObjects.Add(obj);
 
-            EditorObjects.Add(new EditorObject(() => new Player(Camera)));
+            EditorObjects.Add(new EditorObject(() => new Player(Camera), 1, 2));
             EditorObjects.Add(new GameObject { Update = new ChangeToGameMode(this, new CooldownTracker(30)) });
             EditorObjects.Add(new GameObject
             {

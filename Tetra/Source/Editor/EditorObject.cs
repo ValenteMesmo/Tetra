@@ -8,7 +8,7 @@ namespace Tetra
         private readonly Func<GameObject> Factory;
         private readonly Collider Collider;
 
-        public EditorObject(Func<GameObject> Factory)
+        public EditorObject(Func<GameObject> Factory, int widthInBlocks = 1, int heightInBlocks = 1)
         {
             this.Factory = Factory;
             var temp = Factory();
@@ -17,8 +17,8 @@ namespace Tetra
             {
                 OffsetX = 1,
                 OffsetY = 1,
-                Width = GameConstants.BlockSize - 2,
-                Height = GameConstants.BlockSize - 2
+                Width = (GameConstants.BlockSize*widthInBlocks) - 2,
+                Height = (GameConstants.BlockSize* heightInBlocks) - 2
             };
         }
 
