@@ -27,7 +27,7 @@ namespace Tetra
         {
             Frames.Clear();
 
-            var offset = GameConstants.BlockSize / 10;
+            var offset = GameConstants.BlockSize / 20;
             var size = GameConstants.BlockSize - offset - offset;
 
             for (int i = (camera.VisibleArea.Left / GameConstants.BlockSize) - 1; i < (camera.VisibleArea.Right / GameConstants.BlockSize) + 1; i++)
