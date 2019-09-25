@@ -11,16 +11,49 @@ namespace Tetra.Android
         , Theme = "@style/Theme.Splash"
         , AlwaysRetainTaskState = true
         , LaunchMode = LaunchMode.SingleInstance
-        , ScreenOrientation = ScreenOrientation.FullUser
-        , ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize | ConfigChanges.ScreenLayout)]
+        , ScreenOrientation = ScreenOrientation.Landscape
+        , ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize)]
     public class Activity1 : Microsoft.Xna.Framework.AndroidGameActivity
     {
+        private Game1 game;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            var g = new Game1();
-            SetContentView((View)g.Services.GetService(typeof(View)));
-            g.Run();
+            game = new Game1();
+            SetViewFullScreen();
+            game.Run();
+        }
+        
+        private void SetViewFullScreen()
+        {
+            var view = (View)game.Services.GetService(typeof(View));
+
+            view.SystemUiVisibility = (StatusBarVisibility)
+                (SystemUiFlags.LayoutStable
+                | SystemUiFlags.LayoutHideNavigation
+                | SystemUiFlags.LayoutFullscreen
+                | SystemUiFlags.HideNavigation
+                | SystemUiFlags.Fullscreen
+                | SystemUiFlags.ImmersiveSticky
+                );
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
+                Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+
+            SetContentView(view);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            SetViewFullScreen();
+        }
+
+        protected override void OnRestart()
+        {
+            base.OnRestart();
+            SetViewFullScreen();
         }
     }
 }
